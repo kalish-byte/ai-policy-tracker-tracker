@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Policy Tracker Tracker</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+  :root {
+    --bg: #ffffff;
+    --bg-alt: #f8fafc;
+    --border: #e2e8f0;
+    --border-light: #f1f5f9;
+    --text: #0f172a;
+    --text-2: #475569;
+    --text-3: #94a3b8;
+    --blue: #3b82f6;
+    --blue-bg: #eff6ff;
+    --green: #22c55e;
+    --green-bg: #f0fdf4;
+    --amber: #f59e0b;
+    --amber-bg: #fffbeb;
+    --purple: #8b5cf6;
+    --purple-bg: #f5f3ff;
+    --red: #ef4444;
+    --red-bg: #fef2f2;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  /* ── Header ──────────────────────── */
+  .header {
+    border-bottom: 1px solid var(--border);
+    padding: 1.5rem 2rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .header-left h1 {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -.02em;
+  }
+  .header-left h1 span { color: var(--blue); }
+  .header-left .sub {
+    font-size: .78rem;
+    color: var(--text-3);
+    margin-top: .15rem;
+  }
+  .header-right {
+    display: flex;
+    gap: .5rem;
+    align-items: center;
+  }
+  .hdr-btn {
+    padding: .45rem .85rem;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    font-size: .78rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--text-2);
+    transition: all .15s;
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+  }
+  .hdr-btn:hover { border-color: var(--blue); color: var(--blue); }
+  .hdr-btn.active { background: var(--blue); border-color: var(--blue); color: #fff; }
+  .hdr-btn .icon { font-size: .9rem; }
+  .compare-count {
+    display: none;
+    background: var(--blue);
+    color: #fff;
+    border-radius: 10px;
+    padding: 0 .45rem;
+    font-size: .68rem;
+    font-weight: 700;
+    min-width: 18px;
+    text-align: center;
+  }
+  .compare-count.visible { display: inline-block; }
+
+  /* ── Toolbar ─────────────────────── */
+  .toolbar {
+    padding: .75rem 2rem;
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    gap: .6rem;
+    flex-wrap: wrap;
+    align-items: center;
+    background: var(--bg-alt);
+  }
+  .search-input {
+    flex: 1;
+    min-width: 200px;
+    padding: .5rem .75rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: .85rem;
+    outline: none;
+    background: var(--bg);
+  }
+  .search-input:focus { border-color: var(--blue); box-shadow: 0 0 0 2px rgba(59,130,246,.15); }
+  .tb-btn {
+    padding: .45rem .75rem;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    font-size: .78rem;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--text-2);
+    transition: all .15s;
+  }
+  .tb-btn:hover { border-color: var(--blue); color: var(--blue); }
+  .tb-btn.active { background: var(--text); border-color: var(--text); color: #fff; }
+  .result-count {
+    font-size: .78rem;
+    color: var(--text-3);
+    margin-left: auto;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .kbd-hint {
+    font-size: .68rem;
+    color: var(--text-3);
+    margin-left: .5rem;
+  }
+  .kbd-hint kbd {
+    display: inline-block;
+    padding: .05rem .35rem;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .65rem;
+    margin: 0 .1rem;
+  }
+
+  /* ── Table ───────────────────────── */
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: .84rem; }
+  thead { position: sticky; top: 0; z-index: 10; }
+  th {
+    background: var(--bg-alt);
+    border-bottom: 2px solid var(--border);
+    padding: .6rem 1rem;
+    text-align: left;
+    font-size: .72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--text-3);
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+    transition: color .15s;
+  }
+  th:hover { color: var(--blue); }
+  th .arrow { font-size: .65rem; margin-left: .25rem; }
+  th.no-sort { cursor: default; }
+  th.no-sort:hover { color: var(--text-3); }
+
+  tr { border-bottom: 1px solid var(--border-light); transition: background .15s; }
+  tr:hover { background: var(--blue-bg); }
+  tr.expanded { background: var(--bg-alt); }
+  tr.stale { background: var(--amber-bg); }
+  tr.stale:hover { background: #fef3c7; }
+  tr.focused { outline: 2px solid var(--blue); outline-offset: -2px; }
+  tr.compare-selected { background: var(--blue-bg); }
+  tr.compare-selected:hover { background: #dbeafe; }
+
+  td { padding: .6rem 1rem; vertical-align: top; }
+  .cell-name { font-weight: 600; color: var(--text); cursor: pointer; }
+  .cell-name:hover { color: var(--blue); }
+  .cell-org { color: var(--text-2); }
+
+  .chip {
+    display: inline-block;
+    padding: .15rem .45rem;
+    border-radius: 4px;
+    font-size: .7rem;
+    font-weight: 600;
+  }
+  .chip-scope { background: var(--blue-bg); color: var(--blue); }
+  .chip-format { background: var(--purple-bg); color: var(--purple); }
+  .chip-active { background: var(--green-bg); color: var(--green); }
+  .chip-stale { background: var(--amber-bg); color: var(--amber); border: 1px solid #fde68a; }
+  .link-cell a {
+    color: var(--blue);
+    text-decoration: none;
+    font-size: .78rem;
+    font-weight: 500;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .link-cell a:hover { text-decoration: underline; }
+
+  .compare-cb { cursor: pointer; width: 15px; height: 15px; accent-color: var(--blue); }
+
+  .desc-row td {
+    padding: .5rem 1rem .75rem 3rem;
+    font-size: .82rem;
+    color: var(--text-2);
+    line-height: 1.6;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-alt);
+  }
+  .desc-row.hidden { display: none; }
+  .expand-icon {
+    display: inline-block;
+    width: 16px;
+    text-align: center;
+    color: var(--text-3);
+    font-size: .75rem;
+    margin-right: .35rem;
+    cursor: pointer;
+    transition: transform .2s;
+  }
+  .expand-icon.open { transform: rotate(90deg); }
+
+  /* ── Compare Drawer ──────────────── */
+  .compare-drawer {
+    position: fixed;
+    bottom: -100%;
+    left: 0; right: 0;
+    background: var(--bg);
+    border-top: 2px solid var(--blue);
+    box-shadow: 0 -8px 30px rgba(0,0,0,.12);
+    z-index: 100;
+    transition: bottom .35s ease;
+    max-height: 55vh;
+    overflow-y: auto;
+  }
+  .compare-drawer.open { bottom: 0; }
+  .compare-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 2;
+  }
+  .compare-header h3 { font-size: 1rem; font-weight: 700; }
+  .compare-close {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: var(--text-3);
+    padding: .25rem .5rem;
+  }
+  .compare-close:hover { color: var(--text); }
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .84rem;
+    margin: 0;
+  }
+  .compare-table th {
+    padding: .55rem .85rem;
+    font-size: .7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: var(--text-3);
+    background: var(--bg-alt);
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    white-space: nowrap;
+    width: 110px;
+    vertical-align: top;
+    cursor: default;
+  }
+  .compare-table th:hover { color: var(--text-3); }
+  .compare-table td {
+    padding: .55rem .85rem;
+    border-bottom: 1px solid var(--border-light);
+    border-left: 1px solid var(--border-light);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .compare-table .cg-name { font-weight: 700; color: var(--text); font-size: .92rem; }
+  .compare-empty {
+    padding: 2rem;
+    text-align: center;
+    color: var(--text-3);
+    font-size: .9rem;
+  }
+
+  /* ── Coverage Gap ────────────────── */
+  .coverage-section {
+    display: none;
+    max-width: 100%;
+    border-top: 2px solid var(--border);
+    padding: 1.5rem 2rem 2rem;
+    background: var(--bg-alt);
+  }
+  .coverage-section.visible { display: block; }
+  .coverage-section h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: .25rem;
+  }
+  .coverage-section .cov-sub {
+    font-size: .82rem;
+    color: var(--text-3);
+    margin-bottom: 1.25rem;
+  }
+  .gap-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: .75rem;
+  }
+  .gap-card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+    background: var(--bg);
+  }
+  .gap-card h4 {
+    font-size: .85rem;
+    font-weight: 700;
+    margin-bottom: .25rem;
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+  }
+  .gap-card .gap-level {
+    font-size: .62rem;
+    padding: .1rem .4rem;
+    border-radius: 3px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .gap-high { background: var(--red-bg); color: var(--red); }
+  .gap-med { background: var(--amber-bg); color: var(--amber); }
+  .gap-low { background: var(--blue-bg); color: var(--blue); }
+  .gap-card p { font-size: .8rem; color: var(--text-2); line-height: 1.5; }
+
+  /* ── Quiz Modal ──────────────────── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.4);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(2px);
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--bg);
+    border-radius: 12px;
+    width: 90%;
+    max-width: 540px;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,.2);
+  }
+  .modal-head {
+    padding: 1.25rem 1.5rem 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .modal-head h2 { font-size: 1.1rem; font-weight: 800; }
+  .modal-head p { font-size: .82rem; color: var(--text-3); margin-top: .2rem; }
+  .modal-body { padding: 1.25rem 1.5rem; }
+  .modal-foot {
+    padding: .75rem 1.5rem 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .quiz-step { display: none; }
+  .quiz-step.active { display: block; }
+  .quiz-q {
+    font-size: .95rem;
+    font-weight: 600;
+    margin-bottom: .75rem;
+  }
+  .quiz-options { display: flex; flex-direction: column; gap: .4rem; }
+  .quiz-opt {
+    padding: .65rem .85rem;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all .15s;
+    font-size: .85rem;
+  }
+  .quiz-opt:hover { border-color: var(--blue); background: var(--blue-bg); }
+  .quiz-opt.selected { border-color: var(--blue); background: var(--blue-bg); font-weight: 600; }
+  .quiz-opt .opt-label { font-weight: 600; }
+  .quiz-opt .opt-desc { font-size: .78rem; color: var(--text-2); margin-top: .15rem; }
+  .quiz-nav-btn {
+    padding: .5rem 1.1rem;
+    border-radius: 6px;
+    border: none;
+    font-size: .82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .quiz-next { background: var(--blue); color: #fff; }
+  .quiz-next:hover { background: #2563eb; }
+  .quiz-next:disabled { background: var(--border); color: var(--text-3); cursor: not-allowed; }
+  .quiz-back { background: none; border: 1px solid var(--border); color: var(--text-2); }
+  .quiz-back:hover { border-color: var(--text-2); }
+  .quiz-progress {
+    display: flex;
+    gap: .3rem;
+  }
+  .quiz-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--border);
+  }
+  .quiz-dot.done { background: var(--blue); }
+  .quiz-dot.current { background: var(--blue); box-shadow: 0 0 0 3px rgba(59,130,246,.25); }
+
+  /* Quiz results */
+  .quiz-results { display: none; }
+  .quiz-results.active { display: block; }
+  .quiz-match {
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: .6rem;
+    transition: border-color .15s;
+  }
+  .quiz-match:hover { border-color: var(--blue); }
+  .quiz-match-rank {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .7rem;
+    color: var(--text-3);
+    margin-bottom: .2rem;
+  }
+  .quiz-match-name { font-weight: 700; font-size: .95rem; }
+  .quiz-match-org { font-size: .78rem; color: var(--text-3); margin-bottom: .35rem; }
+  .quiz-match-why { font-size: .8rem; color: var(--text-2); line-height: 1.5; }
+  .quiz-match a {
+    display: inline-block;
+    margin-top: .35rem;
+    font-size: .78rem;
+    color: var(--blue);
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .quiz-match a:hover { text-decoration: underline; }
+
+  /* ── Ticker ────────────────────────── */
+  .ticker-footer {
+    border-bottom: 1px solid var(--border);
+    background: var(--text);
+    padding: .5rem 0;
+    overflow: hidden;
+    position: relative;
+  }
+  .ticker-track {
+    display: flex;
+    white-space: nowrap;
+    /* duration set dynamically by JS based on content width */
+  }
+  /* pause handled by JS to avoid shorthand conflicts */
+  .ticker-half {
+    display: inline-flex;
+    flex-shrink: 0;
+  }
+  .ticker-item {
+    font-size: .75rem;
+    color: #6cacf6;
+    padding: 0 2.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    flex-shrink: 0;
+  }
+  .ticker-item .ti-label { color: rgba(255,255,255,.7); font-weight: 600; }
+  /* keyframes injected dynamically with exact pixel values */
+
+  /* ── Easter Egg ──────────────────── */
+  .easter-egg-toast {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    background: var(--text);
+    color: #fff;
+    padding: .75rem 1.25rem;
+    border-radius: 8px;
+    font-size: .85rem;
+    font-weight: 500;
+    z-index: 300;
+    transform: translateX(120%);
+    transition: transform .4s ease;
+    box-shadow: 0 8px 24px rgba(0,0,0,.2);
+    max-width: 360px;
+  }
+  .easter-egg-toast.show { transform: translateX(0); }
+
+  /* ── Keyboard help ───────────────── */
+  .kbd-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.4);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+  .kbd-modal.open { display: flex; }
+  .kbd-panel {
+    background: var(--bg);
+    border-radius: 12px;
+    padding: 1.5rem;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.2);
+  }
+  .kbd-panel h3 { font-size: 1rem; font-weight: 700; margin-bottom: 1rem; }
+  .kbd-row {
+    display: flex;
+    justify-content: space-between;
+    padding: .35rem 0;
+    font-size: .85rem;
+    border-bottom: 1px solid var(--border-light);
+  }
+  .kbd-row:last-child { border: none; }
+  .kbd-keys kbd {
+    display: inline-block;
+    padding: .1rem .4rem;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: var(--bg-alt);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .78rem;
+    margin-right: .2rem;
+  }
+
+  .no-results { text-align: center; padding: 3rem; color: var(--text-3); }
+
+  @media (max-width: 700px) {
+    .header { flex-direction: column; align-items: flex-start; }
+    .toolbar { padding: .75rem 1rem; }
+    td, th { padding: .5rem .5rem; }
+    .kbd-hint { display: none; }
+    .compare-drawer { max-height: 70vh; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Header ──────────────────────── -->
+<div class="header">
+  <div class="header-left">
+    <h1>AI Policy <span>Tracker Tracker</span></h1>
+    <div class="sub">A meta-catalog of AI legislation, regulation & policy tracking tools — March 2026</div>
+  </div>
+  <div class="header-right">
+    <button class="hdr-btn" id="quizBtn"><span class="icon">🧭</span> Which tracker?</button>
+    <button class="hdr-btn" id="compareBtn"><span class="icon">⚖️</span> Compare <span class="compare-count" id="compareCnt">0</span></button>
+    <button class="hdr-btn" id="gapsBtn"><span class="icon">🕳️</span> Coverage gaps</button>
+    <button class="hdr-btn" id="kbdBtn" title="Keyboard shortcuts"><span class="icon">⌨️</span></button>
+  </div>
+</div>
+
+<!-- ── Ticker ──────────────────────── -->
+<div class="ticker-footer">
+  <div class="ticker-track" id="tickerTrack"></div>
+</div>
+
+<!-- ── Toolbar ─────────────────────── -->
+<div class="toolbar">
+  <input class="search-input" id="searchInput" type="text" placeholder="Search...">
+  <button class="tb-btn active" data-c="all">All</button>
+  <button class="tb-btn" data-c="gov">🏛️ Govt</button>
+  <button class="tb-btn" data-c="think">🔬 Think Tank</button>
+  <button class="tb-btn" data-c="law">⚖️ Law Firm</button>
+  <button class="tb-btn" data-c="biz">📊 Industry</button>
+  <span class="result-count" id="rc"></span>
+  <span class="kbd-hint"><kbd>j</kbd><kbd>k</kbd> navigate <kbd>enter</kbd> expand <kbd>/</kbd> search <kbd>?</kbd> help</span>
+</div>
+
+<!-- ── Coverage Gaps ───────────────── -->
+<div class="coverage-section" id="coverageSection">
+  <h3>Coverage Gap Analysis</h3>
+  <p class="cov-sub" id="covSub">What the trackers collectively miss — or at least don't cover well.</p>
+  <div class="gap-grid">
+    <div class="gap-card">
+      <h4>Municipal & City AI Ordinances <span class="gap-level gap-med">Moderate Gap</span></h4>
+      <p>Cities like NYC, San Jose, and Baltimore have passed local AI rules. The NLC City AI Governance Dashboard is a start, but coverage remains thin. Most trackers still stop at the state line.</p>
+    </div>
+    <div class="gap-card">
+      <h4>Enforcement Actions & Outcomes <span class="gap-level gap-med">Moderate Gap</span></h4>
+      <p>Plenty of trackers list what passed. Akin and Holistic AI track enforcement and litigation, but systematic coverage of penalties assessed and compliance rates remains thin. Still largely a "so what" gap.</p>
+    </div>
+    <div class="gap-card">
+      <h4>AI Procurement Rules <span class="gap-level gap-med">Moderate Gap</span></h4>
+      <p>Government AI procurement standards and requirements are scattered across agency-specific guidance. No single tracker aggregates them comprehensively.</p>
+    </div>
+    <div class="gap-card">
+      <h4>Sector-Specific Trackers <span class="gap-level gap-med">Moderate Gap</span></h4>
+      <p>Manatt's healthcare AI tracker is the standout, but financial services, defense/intel, and employment AI rules remain fragmented. No tracker besides Manatt does a single sector end-to-end across jurisdictions.</p>
+    </div>
+    <div class="gap-card">
+      <h4>Soft Law & Voluntary Commitments <span class="gap-level gap-med">Moderate Gap</span></h4>
+      <p>White House AI commitments, industry pledges, standards body frameworks — the OECD tracks some, and AlgorithmWatch cataloged 160+ ethical guidelines before going dormant in 2024. The full universe of non-binding AI governance remains poorly mapped.</p>
+    </div>
+    <div class="gap-card">
+      <h4>Global South AI Governance <span class="gap-level gap-med">Moderate Gap</span></h4>
+      <p>Africa, Latin America, and Southeast Asia are actively legislating AI. The OECD, CAIDP Index (75+ countries), and Oxford Insights (195 countries) have expanded coverage, but deep analysis of non-Western jurisdictions remains thin.</p>
+    </div>
+    <div class="gap-card">
+      <h4>Litigation & Case Law <span class="gap-level gap-med">Moderate Gap</span></h4>
+      <p>AI-related lawsuits are shaping policy as fast as legislation. Akin and Holistic AI both include litigation, but systematic case law tracking with outcomes remains sparse. A whole parallel universe, still mostly untracked.</p>
+    </div>
+    <div class="gap-card">
+      <h4>Real-Time Regulatory Guidance <span class="gap-level gap-low">Minor Gap</span></h4>
+      <p>Agency guidance, interpretive letters, and FAQ updates move fast and often matter more than statutes. A few trackers cover this, but most focus on enacted law.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ── Table ───────────────────────── -->
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th class="no-sort" style="width:36px"><span title="Compare" style="font-size:.8rem">☐</span></th>
+        <th data-sort="n">Name <span class="arrow">▼</span></th>
+        <th data-sort="o">Organization <span class="arrow"></span></th>
+        <th data-sort="cl">Category <span class="arrow"></span></th>
+        <th>Scope</th>
+        <th>Format</th>
+        <th data-sort="cd">Cadence <span class="arrow"></span></th>
+        <th data-sort="st">Status <span class="arrow"></span></th>
+        <th class="no-sort">Link</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+
+<!-- ── Compare Drawer ──────────────── -->
+<div class="compare-drawer" id="compareDrawer">
+  <div class="compare-header">
+    <h3>Compare Trackers</h3>
+    <button class="compare-close" id="compareClose">&times;</button>
+  </div>
+  <div id="compareBody"></div>
+</div>
+
+<!-- ── Quiz Modal ──────────────────── -->
+<div class="modal-overlay" id="quizOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>🧭 Which tracker should I use?</h2>
+      <p>Answer 4 quick questions. We'll match you to the right trackers.</p>
+    </div>
+    <div class="modal-body" id="quizBody">
+      <!-- Steps injected by JS -->
+    </div>
+    <div class="modal-foot" id="quizFoot">
+      <button class="quiz-nav-btn quiz-back" id="quizBack">Back</button>
+      <div class="quiz-progress" id="quizProgress"></div>
+      <button class="quiz-nav-btn quiz-next" id="quizNext" disabled>Next</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Keyboard Help ───────────────── -->
+<div class="kbd-modal" id="kbdModal">
+  <div class="kbd-panel">
+    <h3>Keyboard Shortcuts</h3>
+    <div class="kbd-row"><span>Move down</span><span class="kbd-keys"><kbd>j</kbd> or <kbd>↓</kbd></span></div>
+    <div class="kbd-row"><span>Move up</span><span class="kbd-keys"><kbd>k</kbd> or <kbd>↑</kbd></span></div>
+    <div class="kbd-row"><span>Expand / collapse row</span><span class="kbd-keys"><kbd>Enter</kbd> or <kbd>Space</kbd></span></div>
+    <div class="kbd-row"><span>Toggle compare</span><span class="kbd-keys"><kbd>c</kbd></span></div>
+    <div class="kbd-row"><span>Open link</span><span class="kbd-keys"><kbd>o</kbd></span></div>
+    <div class="kbd-row"><span>Focus search</span><span class="kbd-keys"><kbd>/</kbd></span></div>
+    <div class="kbd-row"><span>Show this help</span><span class="kbd-keys"><kbd>?</kbd></span></div>
+    <div class="kbd-row"><span>Close modal</span><span class="kbd-keys"><kbd>Esc</kbd></span></div>
+  </div>
+</div>
+
+<!-- ── Easter Egg Toast ────────────── -->
+<div class="easter-egg-toast" id="eggToast"></div>
+
+
+<script>
+// ════════════════════════════════════════
+// DATA
+// ════════════════════════════════════════
+const T=[
+{n:"OECD.AI Policy Observatory",o:"OECD",c:"gov",cl:"Government",s:"Intl (80+ jurisdictions)",st2:["intl"],f:"Interactive dashboard",u:"https://oecd.ai/en/dashboards/overview",cd:"Continuous",d:"The 800-lb gorilla. 900+ national AI policies submitted directly by governments. If the OECD tracked it, it's probably real.",st:"Active",cost:"Free",interactive:true},
+{n:"NCSL AI Legislation Database",o:"Nat'l Conference of State Legislatures",c:"gov",cl:"Government",s:"US states",st2:["us-states"],f:"Searchable database",u:"https://www.ncsl.org/financial-services/artificial-intelligence-legislation-database",cd:"Each session",d:"The go-to for state AI legislation. Categorized by topic. Run by the org that literally exists to track state legislatures.",st:"Active",cost:"Free",interactive:true},
+{n:"NCSL AI 2025 Legislation Summary",o:"Nat'l Conference of State Legislatures",c:"gov",cl:"Government",s:"US states (session-specific)",st2:["us-states"],f:"Curated narrative report",u:"https://www.ncsl.org/technology-and-communication/artificial-intelligence-2025-legislation",cd:"Annual",d:"Companion to the database — a curated overview of key AI bills each session. Good for the 'what happened this year' briefing.",st:"Active",cost:"Free",interactive:false},
+{n:"GovTrack.us — AI Bills",o:"Civic Impulse",c:"gov",cl:"Government",s:"US federal",st2:["us-fed"],f:"Legislative feed",u:"https://www.govtrack.us/congress/bills/subjects/artificial_intelligence/5158",cd:"Real-time",d:"Congress.gov filtered by AI tag. Bare-bones but authoritative — straight from the source.",st:"Active",cost:"Free",interactive:true},
+{n:"IAPP US State AI Governance Tracker",o:"IAPP",c:"think",cl:"Think Tank",s:"US states",st2:["us-states"],f:"Interactive tracker",u:"https://iapp.org/resources/article/us-state-ai-governance-legislation-tracker",cd:"Regular",d:"Cross-sectoral AI governance bills. IAPP's privacy DNA means strong data protection angle.",st:"Active",cost:"Free (IAPP members get extras)",interactive:true},
+{n:"IAPP Global AI Law Tracker",o:"IAPP",c:"think",cl:"Think Tank",s:"International",st2:["intl"],f:"Interactive dashboard",u:"https://prod.iapp.org/resources/article/global-ai-legislation-tracker/",cd:"Regular",d:"International developments: EU AI Act, Japan, South Korea. Privacy-forward framing.",st:"Active",cost:"Free (IAPP members get extras)",interactive:true},
+{n:"Brennan Center AI Tracker",o:"Brennan Center for Justice",c:"think",cl:"Think Tank",s:"US federal",st2:["us-fed"],f:"Searchable database",u:"https://www.brennancenter.org/our-work/research-reports/artificial-intelligence-legislation-tracker",cd:"As bills drop",d:"Federal-only with a civil rights lens. 118th and 119th Congress.",st:"Active",cost:"Free",interactive:true},
+{n:"AGORA",o:"GRAIL (Purdue) + Georgetown CSET + MIT",c:"think",cl:"Think Tank",s:"US + intl (900+ docs)",st2:["us-fed","us-states","intl"],f:"Searchable archive",u:"https://www.grail-lab.org/publications/ai-governance-and-regulatory-archive",cd:"Living archive",d:"900+ governance documents mapped to taxonomies of risks, actors, and sectors. Built by Purdue's Governance and Responsible AI Lab. For the serious wonk.",st:"Active",cost:"Free",interactive:true},
+{n:"Brown AISLE Portal",o:"Brown University",c:"think",cl:"Think Tank",s:"US federal + 50 states",st2:["us-fed","us-states"],f:"Database + analyst evaluations",u:"https://www.cntr-aisle.org",cd:"Continuous",d:"Brand new (March 2026). Structured analysis by trained evaluators. The new kid with serious chops.",st:"Active",cost:"Free",interactive:true},
+{n:"Transparency Coalition Tracker",o:"TCAI",c:"think",cl:"Think Tank",s:"US states + federal",st2:["us-fed","us-states"],f:"Curated bill list",u:"https://www.transparencycoalition.ai/news/track-ai-legislation-by-topic",cd:"Session-based",d:"Advocacy-oriented, focused on AI transparency. All 2026 AI bills in one place.",st:"Active",cost:"Free",interactive:false},
+{n:"Stanford HAI AI Index",o:"Stanford HAI",c:"think",cl:"Think Tank",s:"Global",st2:["intl"],f:"Annual report + data",u:"https://hai.stanford.edu/ai-index",cd:"Annual",d:"Not real-time but the annual gold standard. Legislative mentions across 75 countries.",st:"Active",cost:"Free",interactive:false},
+{n:"AAF AI Policy Tracker",o:"American Action Forum",c:"think",cl:"Think Tank",s:"US federal",st2:["us-fed"],f:"Categorized bill table",u:"https://www.americanactionforum.org/list-of-proposed-ai-bills-table/",cd:"As bills drop",d:"Center-right think tank. Five intent-based categories. Good for quick legislative taxonomy.",st:"Active",cost:"Free",interactive:false},
+{n:"FPF State of State AI",o:"Future of Privacy Forum",c:"think",cl:"Think Tank",s:"US states",st2:["us-states"],f:"Annual report",u:"https://fpf.org/blog/the-state-of-state-ai-legislative-approaches-to-ai-in-2025/",cd:"Annual",d:"Analytical dive into state AI legislative trends. Excellent for 'what themes are emerging'.",st:"Active",cost:"Free",interactive:false},
+{n:"White & Case AI Watch",o:"White & Case LLP",c:"law",cl:"Law Firm",s:"Global (12+ countries)",st2:["intl","us-fed","eu"],f:"Country-by-country narrative",u:"https://www.whitecase.com/insight-our-thinking/ai-watch-global-regulatory-tracker",cd:"Regular",d:"Broadest geographic coverage of any law firm tracker. IP, antitrust, data protection, M&A.",st:"Active",cost:"Free",interactive:false},
+{n:"Orrick AI Law Center",o:"Orrick",c:"law",cl:"Law Firm",s:"US states + EU + UK",st2:["us-states","eu","intl"],f:"Interactive searchable tracker",u:"https://ai-law-center.orrick.com/",cd:"Regular",d:"150+ state AI laws filterable by state, date, or domain. The most polished law firm offering.",st:"Active",cost:"Free",interactive:true},
+{n:"Akin AI Law Tracker",o:"Akin Gump",c:"law",cl:"Law Firm",s:"Global",st2:["intl","us-fed","eu"],f:"Searchable event database",u:"https://www.akingump.com/en/insights/ai-law-and-regulation-tracker",cd:"Regular",d:"Legislation + litigation + enforcement globally. Goes beyond bills to include rulings.",st:"Active",cost:"Free",interactive:true},
+{n:"Steptoe AI Tracker",o:"Steptoe LLP",c:"law",cl:"Law Firm",s:"US federal + states",st2:["us-fed","us-states"],f:"Interactive tracker",u:"https://www.steptoe.com/en/ai-legislative-tracker.html",cd:"Ongoing",d:"Bill summaries, sponsor info, status. Clean interface. A reliable workhorse.",st:"Active",cost:"Free",interactive:true},
+{n:"Loeb & Loeb AI Tracker",o:"Loeb & Loeb LLP",c:"law",cl:"Law Firm",s:"US states",st2:["us-states"],f:"Interactive map + database",u:"https://www.loeb.com/en/general/ai",cd:"Regular",d:"State-by-state interactive map covering automated decision-making and data protection.",st:"Active",cost:"Free",interactive:true},
+{n:"BCLP AI Legislation Snapshot",o:"Bryan Cave Leighton Paisner",c:"law",cl:"Law Firm",s:"US + UK + EU",st2:["us-states","eu","intl"],f:"Interactive map + analysis",u:"https://www.bclplaw.com/en-US/events-insights-news/us-state-by-state-artificial-intelligence-legislation-snapshot.html",cd:"Regular",d:"Proposed, failed, and enacted bills with companion UK/EU trackers. Good transatlantic view.",st:"Active",cost:"Free",interactive:true},
+{n:"Mintz Federal AI Tracker",o:"Mintz",c:"law",cl:"Law Firm",s:"US federal",st2:["us-fed"],f:"Bill list + summaries",u:"https://www.mintz.com/ai-legislation",cd:"As bills drop",d:"Federal-only. Congress.gov data with Mintz analysis layered on. Straightforward.",st:"Active",cost:"Free",interactive:false},
+{n:"Husch Blackwell AI State Tracker",o:"Husch Blackwell",c:"law",cl:"Law Firm",s:"US states",st2:["us-states"],f:"Interactive map",u:"https://www.huschblackwell.com/2024-ai-state-law-tracker",cd:"Last updated: 2024",d:"Algorithmic bias and automated employment tools. Branded for 2024 with no 2025/2026 update. Firm has pivoted to privacy and biometric trackers instead.",st:"Stale",cost:"Free",interactive:true},
+{n:"MultiState.ai AI Tracker",o:"MultiState",c:"biz",cl:"Industry",s:"US — all 50 states",st2:["us-states"],f:"Real-time dashboard",u:"https://www.multistate.ai/artificial-intelligence-ai-legislation",cd:"Daily",d:"The commercial powerhouse. Custom summaries for every bill version. 1,208 bills in 2025.",st:"Active",cost:"Free tier + paid",interactive:true},
+{n:"StateScape AI Tracker",o:"StateScape",c:"biz",cl:"Industry",s:"US federal + states",st2:["us-fed","us-states"],f:"Searchable database",u:"https://www.statescape.com/services/aitracker/",cd:"Daily",d:"Free AI-specific tracker from a legislative monitoring company. Good for teams needing a no-cost option.",st:"Active",cost:"Free",interactive:true},
+{n:"DLA Piper — AI Laws of the World",o:"DLA Piper",c:"law",cl:"Law Firm",s:"Global (40+ jurisdictions)",st2:["intl","us-fed","eu"],f:"Interactive comparison tool",u:"https://www.dlapiper.com/en/resources/ai-laws-of-the-world",cd:"Regular",d:"Side-by-side comparison of AI governance across 40+ countries. Modeled on their successful 'Data Protection Laws of the World' tool. Covers transparency, accountability, bias, and risk classification.",st:"Active",cost:"Free",interactive:true},
+{n:"Norton Rose Fulbright AI Regulation Hub",o:"Norton Rose Fulbright",c:"law",cl:"Law Firm",s:"Global",st2:["intl","us-fed","eu"],f:"Global guide + analysis",u:"https://www.nortonrosefulbright.com/en/knowledge/publications/73d88f00/ai-regulation",cd:"Periodic",d:"Comprehensive global AI regulation guide covering IP, procurement, governance, and risk. Published as downloadable guide plus web articles. Strong on cross-border perspective.",st:"Active",cost:"Free",interactive:false},
+{n:"Manatt Health AI Policy Tracker",o:"Manatt, Phelps & Phillips",c:"law",cl:"Law Firm",s:"US (healthcare-specific)",st2:["us-fed","us-states"],f:"Quarterly tracker",u:"https://www.manatt.com/insights/newsletters/health-highlights/manatt-health-health-ai-policy-tracker",cd:"Quarterly",d:"The only dedicated healthcare AI policy tracker. Covers FDA, CMS, ONC, FTC, and state legislation. Found 250+ healthcare AI bills in 47 states in 2025. Fills the sector-specific gap.",st:"Active",cost:"Free",interactive:false},
+{n:"NLC City AI Governance Dashboard",o:"National League of Cities",c:"gov",cl:"Government",s:"US municipalities",st2:["us-states"],f:"Interactive dashboard",u:"https://www.nlc.org/resource/city-ai-governance-dashboard/",cd:"Ongoing",d:"The only tracker cataloging municipal AI governance policies. Tracks how cities use and regulate generative AI in operations and services. Fills the 'below the state line' gap.",st:"Active",cost:"Free",interactive:true},
+{n:"Holistic AI Tracker",o:"Holistic AI",c:"biz",cl:"Industry",s:"Global",st2:["intl","us-fed","us-states","eu"],f:"Real-time knowledge hub",u:"https://www.holisticai.com/ai-tracker",cd:"Continuous",d:"Legislation, regulations, investigations, and lawsuits globally. From a commercial AI governance platform. Strong on enforcement actions — tracks the 'so what' most trackers miss.",st:"Active",cost:"Free",interactive:true},
+{n:"CAIDP AI & Democratic Values Index",o:"Center for AI and Digital Policy",c:"think",cl:"Think Tank",s:"Global (75+ countries)",st2:["intl"],f:"Annual report + country rankings",u:"https://www.caidp.org/reports/caidp-index-2026/",cd:"Annual",d:"Rates and ranks 75+ countries on 12 democratic-values metrics. Nearly 1,500 pages with 7,000+ footnotes. The deepest cross-country AI policy comparison available. Strong Global South coverage.",st:"Active",cost:"Free",interactive:false},
+{n:"Oxford Insights Gov't AI Readiness Index",o:"Oxford Insights",c:"think",cl:"Think Tank",s:"Global (195 countries)",st2:["intl"],f:"Annual index + interactive rankings",u:"https://oxfordinsights.com/ai-readiness/government-ai-readiness-index-2025/",cd:"Annual",d:"Ranks 195 governments on AI readiness across 69 indicators and 6 pillars. The benchmark for 'can your government even govern AI?' Complements legislation trackers with capacity data.",st:"Active",cost:"Free",interactive:true},
+{n:"AlgorithmWatch AI Ethics Guidelines Inventory",o:"AlgorithmWatch",c:"think",cl:"Think Tank",s:"International",st2:["intl"],f:"Searchable inventory",u:"https://inventory.algorithmwatch.org",cd:"Last updated: April 2024",d:"Mapped 160+ ethical AI frameworks worldwide. Revealed how few have enforcement mechanisms. No longer actively maintained, but the archived inventory remains a useful historical reference.",st:"Stale",cost:"Free",interactive:true},
+];
+
+// ════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════
+let ac="all", q="", sortKey="n", sortDir=1;
+let expanded = new Set();
+let compared = new Set();
+let focusIdx = -1;
+let filtered = [];
+
+// ════════════════════════════════════════
+// TABLE RENDER
+// ════════════════════════════════════════
+function getFiltered() {
+  let f = T.filter(t => {
+    if (ac !== "all" && t.c !== ac) return false;
+    if (q && ![t.n, t.o, t.d, t.s, t.f, t.cl].join(" ").toLowerCase().includes(q.toLowerCase())) return false;
+    return true;
+  });
+  f.sort((a, b) => {
+    let va = a[sortKey] || "", vb = b[sortKey] || "";
+    return va.localeCompare(vb) * sortDir;
+  });
+  return f;
+}
+
+function render() {
+  filtered = getFiltered();
+  document.getElementById("rc").textContent = `${filtered.length} of ${T.length}`;
+  const tb = document.getElementById("tbody");
+  if (!filtered.length) { tb.innerHTML = '<tr><td colspan="9" class="no-results">No trackers match your search.</td></tr>'; return; }
+  let h = "";
+  filtered.forEach((t, i) => {
+    const isExp = expanded.has(t.n);
+    const isCmp = compared.has(t.n);
+    const staleClass = t.st.includes("Stale") ? " stale" : "";
+    const cmpClass = isCmp ? " compare-selected" : "";
+    const focClass = i === focusIdx ? " focused" : "";
+    const chipSt = t.st === "Active" ? "chip-active" : "chip-stale";
+    let domain;
+    try { domain = new URL(t.u).hostname.replace('www.', ''); } catch(e) { domain = t.u; }
+    h += `<tr class="${isExp ? 'expanded' : ''}${staleClass}${cmpClass}${focClass}" data-i="${i}">
+      <td><input type="checkbox" class="compare-cb" data-n="${t.n}" ${isCmp ? 'checked' : ''}></td>
+      <td><span class="expand-icon ${isExp ? 'open' : ''}" data-n="${t.n}">▶</span><span class="cell-name" data-n="${t.n}">${t.n}</span></td>
+      <td class="cell-org">${t.o}</td>
+      <td><span class="chip chip-scope">${t.cl}</span></td>
+      <td>${t.s}</td>
+      <td><span class="chip chip-format">${t.f.split(',')[0]}</span></td>
+      <td>${t.cd}</td>
+      <td><span class="chip ${chipSt}">${t.st}</span></td>
+      <td class="link-cell"><a href="${t.u}" target="_blank">${domain.length > 24 ? domain.slice(0, 22) + '…' : domain}</a></td>
+    </tr>
+    <tr class="desc-row ${isExp ? '' : 'hidden'}" data-desc-n="${t.n}"><td colspan="9">${t.d}</td></tr>`;
+  });
+  tb.innerHTML = h;
+
+  // Event handlers
+  tb.querySelectorAll('.expand-icon, .cell-name').forEach(el => {
+    el.addEventListener('click', () => toggleExpand(el.dataset.n));
+  });
+  tb.querySelectorAll('.compare-cb').forEach(cb => {
+    cb.addEventListener('change', () => {
+      if (cb.checked) { if (compared.size < 4) compared.add(cb.dataset.n); else { cb.checked = false; } }
+      else compared.delete(cb.dataset.n);
+      updateCompareUI();
+      render();
+    });
+  });
+}
+
+function toggleExpand(name) {
+  if (expanded.has(name)) expanded.delete(name); else expanded.add(name);
+  render();
+}
+
+// ════════════════════════════════════════
+// COMPARE
+// ════════════════════════════════════════
+function updateCompareUI() {
+  const cnt = document.getElementById("compareCnt");
+  cnt.textContent = compared.size;
+  cnt.classList.toggle("visible", compared.size > 0);
+  document.getElementById("compareBtn").classList.toggle("active", compared.size > 0);
+}
+
+function renderCompare() {
+  const body = document.getElementById("compareBody");
+  if (compared.size === 0) {
+    body.innerHTML = '<div class="compare-empty">Select 2–4 trackers using the checkboxes in the table, then open this panel.</div>';
+    return;
+  }
+  const items = T.filter(t => compared.has(t.n));
+  const fields = [
+    {key: "n", label: "Name", cls: "cg-name"},
+    {key: "o", label: "Organization"},
+    {key: "s", label: "Scope"},
+    {key: "f", label: "Format"},
+    {key: "cd", label: "Cadence"},
+    {key: "cost", label: "Cost"},
+    {key: "interactive", label: "Interactive?"},
+    {key: "st", label: "Status"},
+    {key: "d", label: "Description"},
+    {key: "u", label: "Link"},
+  ];
+  let h = `<table class="compare-table"><tbody>`;
+  fields.forEach(fld => {
+    h += `<tr><th>${fld.label}</th>`;
+    items.forEach(t => {
+      let val = t[fld.key];
+      if (fld.key === "interactive") val = val ? "✓ Yes" : "✗ No";
+      if (fld.key === "u") {
+        let domain; try { domain = new URL(val).hostname.replace('www.',''); } catch(e) { domain = val; }
+        val = `<a href="${val}" target="_blank" style="color:var(--blue);text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:.78rem">${domain}</a>`;
+      }
+      if (fld.key === "st") {
+        const chipCls = val === "Active" ? "chip-active" : "chip-stale";
+        val = `<span class="chip ${chipCls}">${val}</span>`;
+      }
+      h += `<td${fld.cls ? ` class="${fld.cls}"` : ''}>${val}</td>`;
+    });
+    h += `</tr>`;
+  });
+  h += `</tbody></table>`;
+  body.innerHTML = h;
+}
+
+document.getElementById("compareBtn").addEventListener("click", () => {
+  const d = document.getElementById("compareDrawer");
+  d.classList.toggle("open");
+  if (d.classList.contains("open")) renderCompare();
+});
+document.getElementById("compareClose").addEventListener("click", () => {
+  document.getElementById("compareDrawer").classList.remove("open");
+});
+
+// ════════════════════════════════════════
+// COVERAGE GAPS
+// ════════════════════════════════════════
+document.getElementById("gapsBtn").addEventListener("click", () => {
+  const s = document.getElementById("coverageSection");
+  s.classList.toggle("visible");
+  document.getElementById("gapsBtn").classList.toggle("active", s.classList.contains("visible"));
+});
+
+// ════════════════════════════════════════
+// QUIZ
+// ════════════════════════════════════════
+const QUIZ = [
+  {
+    q: "What geography do you need to cover?",
+    opts: [
+      {label: "US federal legislation", value: "us-fed"},
+      {label: "US state legislation", value: "us-states"},
+      {label: "EU / AI Act specifically", value: "eu"},
+      {label: "Global / multi-jurisdiction", value: "intl"},
+    ]
+  },
+  {
+    q: "What kind of resource do you need?",
+    opts: [
+      {label: "A searchable, interactive database", desc: "I want to filter and drill down", value: "interactive"},
+      {label: "Curated analysis and narrative", desc: "Just tell me what matters", value: "narrative"},
+      {label: "Raw data I can work with", desc: "CSVs, APIs, GitHub repos", value: "data"},
+      {label: "I'll take whatever's good", value: "any"},
+    ]
+  },
+  {
+    q: "What's your primary use case?",
+    opts: [
+      {label: "Compliance monitoring", desc: "I need to know what rules apply to my org", value: "compliance"},
+      {label: "Policy research / analysis", desc: "I'm studying or writing about AI policy", value: "research"},
+      {label: "Government affairs / lobbying", desc: "I'm tracking bills for strategic purposes", value: "govaffairs"},
+      {label: "General awareness", desc: "I just want to stay informed", value: "general"},
+    ]
+  },
+  {
+    q: "How often do you need updates?",
+    opts: [
+      {label: "Real-time / daily", desc: "I can't miss anything", value: "realtime"},
+      {label: "Weekly to monthly", desc: "Regular check-ins are fine", value: "regular"},
+      {label: "Quarterly or annual snapshots", desc: "Big picture is what matters", value: "periodic"},
+    ]
+  }
+];
+let quizStep = 0, quizAnswers = [];
+
+function buildQuiz() {
+  const body = document.getElementById("quizBody");
+  let stepsHtml = '';
+  QUIZ.forEach((step, si) => {
+    stepsHtml += `<div class="quiz-step ${si === 0 ? 'active' : ''}" data-step="${si}">
+      <div class="quiz-q">${step.q}</div>
+      <div class="quiz-options">`;
+    step.opts.forEach((opt, oi) => {
+      stepsHtml += `<div class="quiz-opt" data-step="${si}" data-val="${opt.value}">
+        <div class="opt-label">${opt.label}</div>
+        ${opt.desc ? `<div class="opt-desc">${opt.desc}</div>` : ''}
+      </div>`;
+    });
+    stepsHtml += `</div></div>`;
+  });
+  stepsHtml += `<div class="quiz-results" id="quizResults"></div>`;
+  body.innerHTML = stepsHtml;
+
+  body.querySelectorAll('.quiz-opt').forEach(o => {
+    o.addEventListener('click', () => {
+      const si = parseInt(o.dataset.step);
+      body.querySelectorAll(`.quiz-opt[data-step="${si}"]`).forEach(x => x.classList.remove('selected'));
+      o.classList.add('selected');
+      quizAnswers[si] = o.dataset.val;
+      document.getElementById("quizNext").disabled = false;
+    });
+  });
+
+  updateQuizUI();
+}
+
+function updateQuizUI() {
+  document.querySelectorAll('.quiz-step').forEach(s => s.classList.remove('active'));
+  const current = document.querySelector(`.quiz-step[data-step="${quizStep}"]`);
+  if (current) current.classList.add('active');
+
+  const prog = document.getElementById("quizProgress");
+  prog.innerHTML = QUIZ.map((_, i) =>
+    `<div class="quiz-dot ${i < quizStep ? 'done' : ''} ${i === quizStep ? 'current' : ''}"></div>`
+  ).join('');
+
+  document.getElementById("quizBack").style.visibility = quizStep === 0 ? 'hidden' : 'visible';
+  const nextBtn = document.getElementById("quizNext");
+  nextBtn.disabled = !quizAnswers[quizStep];
+  nextBtn.textContent = quizStep === QUIZ.length - 1 ? 'See Results' : 'Next';
+}
+
+function scoreQuiz() {
+  const [geo, format, useCase, freq] = quizAnswers;
+  return T.map(t => {
+    let score = 0;
+    // Geography
+    if (t.st2.includes(geo)) score += 3;
+    if (t.st2.length > 2) score += 1; // breadth bonus
+    // Format
+    if (format === "interactive" && t.interactive) score += 2;
+    if (format === "narrative" && !t.interactive) score += 2;
+    if (format === "data" && t.f.toLowerCase().includes("github")) score += 3;
+    if (format === "any") score += 1;
+    // Use case
+    if (useCase === "compliance" && (t.n.includes("Orrick") || t.f.includes("Compliance") || t.n.includes("Holistic") || t.n.includes("DLA Piper") || t.n.includes("Manatt") || t.c === "law")) score += 2;
+    if (useCase === "research" && (t.c === "think" || t.n.includes("Stanford") || t.n.includes("AGORA"))) score += 2;
+    if (useCase === "govaffairs" && (t.cd.includes("Daily") || t.cd.includes("Real") || t.cd.includes("Continuous") || t.c === "biz")) score += 2;
+    if (useCase === "general") score += 1;
+    // Frequency
+    if (freq === "realtime" && (t.cd.includes("Daily") || t.cd.includes("Real") || t.cd.includes("Continuous"))) score += 2;
+    if (freq === "regular" && (t.cd.includes("Regular") || t.cd.includes("Ongoing") || t.cd.includes("Quarterly"))) score += 2;
+    if (freq === "periodic" && (t.cd.includes("Annual") || t.cd.includes("Periodic"))) score += 2;
+    // Freshness penalty
+    if (t.st !== "Active") score -= 3;
+    return {tracker: t, score};
+  }).sort((a, b) => b.score - a.score).slice(0, 3);
+}
+
+function showQuizResults() {
+  document.querySelectorAll('.quiz-step').forEach(s => s.classList.remove('active'));
+  const results = scoreQuiz();
+  const el = document.getElementById("quizResults");
+  el.classList.add('active');
+  el.innerHTML = `<div class="quiz-q">Your top matches:</div>` +
+    results.map((r, i) => `
+      <div class="quiz-match">
+        <div class="quiz-match-rank">#${i + 1} match</div>
+        <div class="quiz-match-name">${r.tracker.n}</div>
+        <div class="quiz-match-org">${r.tracker.o} · ${r.tracker.cl} · ${r.tracker.s}</div>
+        <div class="quiz-match-why">${r.tracker.d}</div>
+        <a href="${r.tracker.u}" target="_blank">Visit tracker →</a>
+      </div>
+    `).join('');
+  document.getElementById("quizFoot").innerHTML =
+    `<button class="quiz-nav-btn quiz-back" onclick="openQuiz()">Start Over</button>
+     <div></div>
+     <button class="quiz-nav-btn quiz-next" onclick="closeQuiz()">Done</button>`;
+}
+
+function resetQuiz() {
+  quizStep = 0; quizAnswers = [];
+  const res = document.getElementById("quizResults");
+  if (res) { res.classList.remove('active'); res.innerHTML = ''; }
+  document.querySelectorAll('.quiz-opt').forEach(o => o.classList.remove('selected'));
+  document.getElementById("quizFoot").innerHTML =
+    `<button class="quiz-nav-btn quiz-back" id="quizBack">Back</button>
+     <div class="quiz-progress" id="quizProgress"></div>
+     <button class="quiz-nav-btn quiz-next" id="quizNext" disabled>Next</button>`;
+  updateQuizUI();
+  document.getElementById("quizBack").addEventListener('click', () => { if (quizStep > 0) { quizStep--; updateQuizUI(); }});
+  document.getElementById("quizNext").addEventListener('click', quizNextHandler);
+}
+
+function quizNextHandler() {
+  if (quizStep < QUIZ.length - 1) { quizStep++; updateQuizUI(); }
+  else showQuizResults();
+}
+
+function closeQuiz() {
+  document.getElementById("quizOverlay").classList.remove("open");
+}
+
+function openQuiz() {
+  document.getElementById("quizOverlay").classList.add("open");
+  // Build DOM first, THEN reset state
+  buildQuiz();
+  quizStep = 0;
+  quizAnswers = [];
+  document.querySelectorAll('.quiz-opt').forEach(o => o.classList.remove('selected'));
+  // Restore footer buttons
+  document.getElementById("quizFoot").innerHTML =
+    `<button class="quiz-nav-btn quiz-back" id="quizBack">Back</button>
+     <div class="quiz-progress" id="quizProgress"></div>
+     <button class="quiz-nav-btn quiz-next" id="quizNext" disabled>Next</button>`;
+  updateQuizUI();
+  document.getElementById("quizBack").addEventListener('click', () => { if (quizStep > 0) { quizStep--; updateQuizUI(); }});
+  document.getElementById("quizNext").addEventListener('click', quizNextHandler);
+}
+
+document.getElementById("quizBtn").addEventListener("click", openQuiz);
+document.getElementById("quizOverlay").addEventListener("click", e => {
+  if (e.target === document.getElementById("quizOverlay")) closeQuiz();
+});
+
+// ════════════════════════════════════════
+// KEYBOARD NAVIGATION
+// ════════════════════════════════════════
+document.addEventListener('keydown', e => {
+  // Don't intercept when typing in search or modal is open
+  const inInput = document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA';
+  const modalOpen = document.getElementById("quizOverlay").classList.contains("open") ||
+                    document.getElementById("kbdModal").classList.contains("open");
+
+  if (e.key === 'Escape') {
+    document.getElementById("quizOverlay").classList.remove("open");
+    document.getElementById("kbdModal").classList.remove("open");
+    document.getElementById("compareDrawer").classList.remove("open");
+    if (inInput) document.activeElement.blur();
+    return;
+  }
+
+  if (inInput || modalOpen) return;
+
+  if (e.key === '/' ) { e.preventDefault(); document.getElementById("searchInput").focus(); return; }
+  if (e.key === '?') { e.preventDefault(); document.getElementById("kbdModal").classList.toggle("open"); return; }
+
+  if ((e.key === 'j' || e.key === 'ArrowDown') && filtered.length) {
+    e.preventDefault();
+    focusIdx = Math.min(focusIdx + 1, filtered.length - 1);
+    render();
+    scrollToFocused();
+    return;
+  }
+  if ((e.key === 'k' || e.key === 'ArrowUp') && filtered.length) {
+    e.preventDefault();
+    focusIdx = Math.max(focusIdx - 1, 0);
+    render();
+    scrollToFocused();
+    return;
+  }
+  if ((e.key === 'Enter' || e.key === ' ') && focusIdx >= 0 && focusIdx < filtered.length) {
+    e.preventDefault();
+    toggleExpand(filtered[focusIdx].n);
+    return;
+  }
+  if (e.key === 'c' && focusIdx >= 0 && focusIdx < filtered.length) {
+    const name = filtered[focusIdx].n;
+    if (compared.has(name)) compared.delete(name); else if (compared.size < 4) compared.add(name);
+    updateCompareUI();
+    render();
+    return;
+  }
+  if (e.key === 'o' && focusIdx >= 0 && focusIdx < filtered.length) {
+    window.open(filtered[focusIdx].u, '_blank');
+    return;
+  }
+});
+
+function scrollToFocused() {
+  const row = document.querySelector('tr.focused');
+  if (row) row.scrollIntoView({block: 'nearest', behavior: 'smooth'});
+}
+
+// ════════════════════════════════════════
+// KEYBOARD HELP MODAL
+// ════════════════════════════════════════
+document.getElementById("kbdBtn").addEventListener("click", () => {
+  document.getElementById("kbdModal").classList.toggle("open");
+});
+document.getElementById("kbdModal").addEventListener("click", e => {
+  if (e.target === document.getElementById("kbdModal")) document.getElementById("kbdModal").classList.remove("open");
+});
+
+// ════════════════════════════════════════
+// SORTING
+// ════════════════════════════════════════
+document.querySelectorAll('th[data-sort]').forEach(th => {
+  th.addEventListener('click', () => {
+    const key = th.dataset.sort;
+    if (sortKey === key) sortDir *= -1; else { sortKey = key; sortDir = 1; }
+    document.querySelectorAll('th .arrow').forEach(a => a.textContent = '');
+    th.querySelector('.arrow').textContent = sortDir === 1 ? '▼' : '▲';
+    focusIdx = -1;
+    render();
+  });
+});
+
+// ════════════════════════════════════════
+// CATEGORY FILTERS
+// ════════════════════════════════════════
+document.querySelectorAll('.tb-btn').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.tb-btn').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    ac = b.dataset.c;
+    focusIdx = -1;
+    expanded.clear();
+    render();
+  });
+});
+
+document.getElementById("searchInput").addEventListener("input", e => {
+  q = e.target.value;
+  focusIdx = -1;
+  expanded.clear();
+  render();
+});
+
+// ════════════════════════════════════════
+// TICKER
+// ════════════════════════════════════════
+function buildTicker() {
+  const items = [
+    // Data-driven
+    `<span class="ti-label">Trackers cataloged:</span> ${T.length}`,
+    `<span class="ti-label">Currently active:</span> ${T.filter(t => t.st === 'Active').length}`,
+    `<span class="ti-label">States that passed AI laws in 2025:</span> 45 of 50`,
+    `<span class="ti-label">Federal AI bills in 118th Congress:</span> 150+ introduced / 0 enacted`,
+    `<span class="ti-label">Countries with national AI strategies:</span> 80+`,
+    `<span class="ti-label">EU AI Act high-risk compliance deadline:</span> Aug 2026`,
+    // Editorial
+    `<span class="ti-label">Law firm trackers:</span> ${T.filter(t => t.c === 'law').length} (it's a competitive market)`,
+    `<span class="ti-label">Think tanks with "Future" in the name:</span> 1 (none from the past)`,
+    `<span class="ti-label">Municipal AI ordinance trackers:</span> 1 (it's a start)`,
+    `<span class="ti-label">Odds two trackers agree on the exact number of AI bills:</span> low`,
+    `<span class="ti-label">Trackers that include an actual definition of "AI":</span> fewer than you'd think`,
+    `<span class="ti-label">Trackers that would describe themselves as "comprehensive":</span> all of them`,
+    `<span class="ti-label">Time between a bill passing and a law firm alert about it:</span> ~4 hours`,
+    `<span class="ti-label">Distinct definitions of "artificial intelligence" across state laws:</span> at least 12`,
+    `<span class="ti-label">Trackers with "AI" in the name:</span> all of them, obviously`,
+    `<span class="ti-label">Estimated total build cost of all trackers:</span> unknowable, but definitely > $0`,
+    `<span class="ti-label">Days since a new AI tracker launched:</span> probably 0`,
+    `<span class="ti-label">Percentage that are free:</span> ~97% (lawyers love giving away content)`,
+    `<span class="ti-label">Number of trackers needed:</span> genuinely unclear`,
+    // Self-referential
+    `<span class="ti-label">Recursive depth of this project:</span> 2 (for now)`,
+  ];
+  const html = items.map(i => `<span class="ticker-item">${i}</span>`).join('');
+  const track = document.getElementById("tickerTrack");
+  // Wrap each half in a span so we can measure the first one precisely
+  track.innerHTML = `<span class="ticker-half" id="tickerHalf1">${html}</span><span class="ticker-half">${html}</span>`;
+
+  // Measure after fonts load so we get accurate width
+  document.fonts.ready.then(() => {
+    const halfWidth = document.getElementById("tickerHalf1").offsetWidth;
+    const duration = halfWidth / 55;
+    // Inject keyframes with exact pixel value — no percentage rounding issues
+    const style = document.createElement('style');
+    style.textContent = `@keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-${halfWidth}px); } }`;
+    document.head.appendChild(style);
+    // Set animation properties separately so play-state can be toggled independently
+    track.style.animationName = 'ticker';
+    track.style.animationDuration = duration + 's';
+    track.style.animationTimingFunction = 'linear';
+    track.style.animationIterationCount = 'infinite';
+
+    // JS-based hover pause — more reliable than CSS animation-play-state on shorthand
+    const footer = document.querySelector('.ticker-footer');
+    footer.addEventListener('mouseenter', () => { track.style.animationPlayState = 'paused'; });
+    footer.addEventListener('mouseleave', () => { track.style.animationPlayState = 'running'; });
+  });
+}
+
+// ════════════════════════════════════════
+// EASTER EGG — Konami Code
+// ════════════════════════════════════════
+const KONAMI = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+let konamiIdx = 0;
+
+document.addEventListener('keydown', e => {
+  if (document.activeElement.tagName === 'INPUT') return;
+  if (e.key === KONAMI[konamiIdx]) {
+    konamiIdx++;
+    if (konamiIdx === KONAMI.length) {
+      konamiIdx = 0;
+      triggerEasterEgg();
+    }
+  } else {
+    konamiIdx = 0;
+  }
+});
+
+function triggerEasterEgg() {
+  // Temporarily add the meta-tracker as a row
+  const meta = {
+    n: "🐢 AI Policy Tracker Tracker Tracker",
+    o: "You, right now, reading this",
+    c: "meta",
+    cl: "Meta",
+    s: "This very page",
+    st2: ["meta"],
+    f: "You're looking at it",
+    u: window.location.href,
+    cd: "When someone remembers",
+    d: "A tracker that tracks the tracker that tracks the trackers. We've gone too deep. There is no going back. The turtles go all the way down.",
+    st: "Existential",
+    cost: "Your time",
+    interactive: true,
+  };
+
+  // Show toast
+  const toast = document.getElementById("eggToast");
+  toast.innerHTML = `🐢 <strong>Achievement unlocked:</strong> You found the Tracker Tracker Tracker. It's turtles all the way down.`;
+  toast.classList.add("show");
+  setTimeout(() => toast.classList.remove("show"), 5000);
+
+  // Briefly inject into table
+  if (!T.find(t => t.n.includes("Tracker Tracker Tracker"))) {
+    T.unshift(meta);
+    render();
+    // Remove after 30 seconds
+    setTimeout(() => {
+      const idx = T.findIndex(t => t.n.includes("Tracker Tracker Tracker"));
+      if (idx >= 0) T.splice(idx, 1);
+      render();
+    }, 30000);
+  }
+}
+
+// ════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════
+buildTicker();
+render();
+document.getElementById("covSub").textContent = `What the ${T.length} trackers collectively miss — or at least don't cover well.`;
+</script>
+</body>
+</html>

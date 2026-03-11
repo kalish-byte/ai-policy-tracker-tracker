@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Policy Tracker Tracker — Bento + Playful Demo</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+  :root {
+    --bg: #faf9f7;
+    --white: #ffffff;
+    --navy: #1a1a2e;
+    --text: #2d2d3a;
+    --text-dim: #6b6b80;
+    --text-muted: #a0a0b2;
+    --blue: #4f6df5;
+    --blue-bg: #eef1ff;
+    --purple: #8b5cf6;
+    --purple-bg: #f3eeff;
+    --green: #10b981;
+    --green-bg: #ecfdf5;
+    --amber: #f59e0b;
+    --amber-bg: #fffbeb;
+    --pink: #ec4899;
+    --pink-bg: #fdf2f8;
+    --radius: 20px;
+    --radius-sm: 14px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* ── Hero ─────────────────────────── */
+  .hero {
+    padding: 3.5rem 2rem 2.5rem;
+    text-align: center;
+  }
+  .hero-emoji { font-size: 3rem; margin-bottom: .75rem; }
+  .hero h1 {
+    font-size: clamp(1.8rem, 4.5vw, 3rem);
+    font-weight: 900;
+    letter-spacing: -.03em;
+    color: var(--navy);
+    margin-bottom: .5rem;
+  }
+  .hero h1 .highlight {
+    background: linear-gradient(120deg, var(--blue) 0%, var(--purple) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero .tagline {
+    font-size: 1.05rem;
+    color: var(--text-dim);
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  /* ── Stats Bento ─────────────────── */
+  .stats-bento {
+    max-width: 520px;
+    margin: 2rem auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: .6rem;
+  }
+  .stat-box {
+    border-radius: var(--radius-sm);
+    padding: .9rem .5rem;
+    text-align: center;
+  }
+  .stat-box:nth-child(1) { background: var(--blue-bg); }
+  .stat-box:nth-child(2) { background: var(--purple-bg); }
+  .stat-box:nth-child(3) { background: var(--green-bg); }
+  .stat-box:nth-child(4) { background: var(--pink-bg); }
+  .stat-box .num {
+    font-size: 1.8rem;
+    font-weight: 900;
+    line-height: 1.1;
+  }
+  .stat-box:nth-child(1) .num { color: var(--blue); }
+  .stat-box:nth-child(2) .num { color: var(--purple); }
+  .stat-box:nth-child(3) .num { color: var(--green); }
+  .stat-box:nth-child(4) .num { color: var(--pink); }
+  .stat-box .label {
+    font-size: .65rem;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--text-muted);
+    margin-top: .15rem;
+  }
+
+  /* ── Controls ─────────────────────── */
+  .controls {
+    max-width: 1100px;
+    margin: 0 auto 1.5rem;
+    padding: 0 1.5rem;
+    display: flex;
+    gap: .75rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .search-box {
+    flex: 1;
+    min-width: 220px;
+    position: relative;
+  }
+  .search-box svg {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px; height: 18px;
+    color: var(--text-muted);
+  }
+  .search-box input {
+    width: 100%;
+    padding: .7rem .85rem .7rem 2.6rem;
+    border: 2px solid #e8e8ee;
+    border-radius: 14px;
+    font-size: .92rem;
+    background: var(--white);
+    outline: none;
+    transition: border .2s;
+  }
+  .search-box input:focus { border-color: var(--blue); }
+
+  .chips { display: flex; gap: .4rem; flex-wrap: wrap; }
+  .chip {
+    padding: .5rem 1rem;
+    border-radius: 12px;
+    border: 2px solid #e8e8ee;
+    background: var(--white);
+    font-size: .82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s;
+    color: var(--text-dim);
+  }
+  .chip:hover { border-color: var(--blue); color: var(--blue); transform: translateY(-1px); }
+  .chip.active {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(26,26,46,.2);
+  }
+
+  /* ── Bento Grid ──────────────────── */
+  .main {
+    max-width: 1100px;
+    margin: 0 auto 3rem;
+    padding: 0 1.5rem;
+  }
+  .cat-section { margin-bottom: 2.5rem; }
+  .cat-title-row {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    margin-bottom: 1rem;
+  }
+  .cat-emoji { font-size: 1.5rem; }
+  .cat-title-row h2 { font-size: 1.1rem; font-weight: 800; color: var(--navy); }
+  .cat-title-row .cnt { font-weight: 400; color: var(--text-muted); }
+
+  .bento {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: .75rem;
+  }
+  /* Make first card in each category span 2 cols on wide screens */
+  .bento .card:first-child {
+    grid-column: span 1;
+  }
+  @media (min-width: 700px) {
+    .bento .card:first-child { grid-column: span 2; }
+  }
+
+  .card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 1.3rem;
+    border: 2px solid #f0f0f5;
+    transition: all .25s;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .card:hover {
+    border-color: var(--blue);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 28px rgba(79,109,245,.1);
+  }
+  .card.stale {
+    border-color: var(--amber);
+    background: var(--amber-bg);
+  }
+
+  .card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: .5rem;
+    margin-bottom: .35rem;
+  }
+  .card-name {
+    font-size: .98rem;
+    font-weight: 800;
+    color: var(--navy);
+    line-height: 1.3;
+  }
+  .status {
+    flex-shrink: 0;
+    font-size: .62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    padding: .2rem .55rem;
+    border-radius: 8px;
+  }
+  .s-active { background: var(--green-bg); color: var(--green); }
+  .s-stale { background: var(--amber-bg); color: var(--amber); border: 1px solid #fde68a; }
+
+  .card-org {
+    font-size: .8rem;
+    color: var(--text-muted);
+    margin-bottom: .6rem;
+  }
+  .card-desc {
+    font-size: .86rem;
+    color: var(--text-dim);
+    line-height: 1.55;
+    flex: 1;
+    margin-bottom: .7rem;
+  }
+
+  .meta-row {
+    display: flex;
+    gap: .35rem;
+    flex-wrap: wrap;
+    margin-bottom: .7rem;
+  }
+  .meta {
+    font-size: .67rem;
+    padding: .2rem .55rem;
+    border-radius: 8px;
+    font-weight: 600;
+  }
+  .m-scope { background: var(--blue-bg); color: var(--blue); }
+  .m-format { background: var(--purple-bg); color: var(--purple); }
+  .m-cadence { background: var(--green-bg); color: var(--green); }
+
+  .visit {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    font-size: .82rem;
+    font-weight: 700;
+    color: var(--blue);
+    text-decoration: none;
+    transition: gap .2s;
+  }
+  .visit:hover { gap: .55rem; }
+
+  .no-results { text-align: center; padding: 4rem; color: var(--text-muted); }
+
+  footer {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-muted);
+    font-size: .8rem;
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-emoji">🗂️</div>
+  <h1>AI Policy <span class="highlight">Tracker Tracker</span></h1>
+  <p class="tagline">A catalog of every tool tracking AI legislation & policy — because the trackers needed a tracker.</p>
+  <div class="stats-bento">
+    <div class="stat-box"><div class="num">30</div><div class="label">Trackers</div></div>
+    <div class="stat-box"><div class="num">27</div><div class="label">Orgs</div></div>
+    <div class="stat-box"><div class="num">4</div><div class="label">Categories</div></div>
+    <div class="stat-box"><div class="num">29</div><div class="label">Active</div></div>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="search-box">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    <input type="text" id="searchInput" placeholder="Search trackers, orgs, descriptions...">
+  </div>
+  <div class="chips" id="chips"></div>
+</div>
+
+<div class="main" id="main"></div>
+
+<footer>Compiled March 2026. This tracker of trackers will itself need tracking. We contain multitudes. 🐢</footer>
+
+<script>
+const T=[
+{n:"OECD.AI Policy Observatory",o:"OECD",c:"gov",s:"Intl (80+ jurisdictions)",f:"Interactive dashboard",u:"https://oecd.ai/en/dashboards/overview",cd:"Continuous",d:"The 800-lb gorilla. 900+ national AI policies submitted directly by governments. If the OECD tracked it, it's probably real.",st:"Active"},
+{n:"EU AI Act Service Desk",o:"European Commission",c:"gov",s:"EU member states",f:"Compliance tool",u:"https://ai-act-service-desk.ec.europa.eu/en",cd:"Ongoing",d:"Official EU compliance checker — does the AI Act apply to you? Includes interactive Act Explorer.",st:"Active"},
+{n:"NCSL AI Legislation Database",o:"NCSL",c:"gov",s:"US states",f:"Searchable database",u:"https://www.ncsl.org/financial-services/artificial-intelligence-legislation-database",cd:"Each session",d:"The go-to for state AI legislation. Run by the org that literally exists to track state legislatures.",st:"Active"},
+{n:"Federal AI Use Case Inventory",o:"OMB / CIO.gov",c:"gov",s:"US federal agencies",f:"GitHub dataset",u:"https://github.com/ombegov/2025-Federal-Agency-AI-Use-Case-Inventory",cd:"Annual",d:"What AI is the government actually using? 1,700+ use cases. The receipts, not the promises.",st:"Active"},
+{n:"GovTrack.us — AI Bills",o:"Civic Impulse",c:"gov",s:"US federal",f:"Legislative feed",u:"https://www.govtrack.us/congress/bills/subjects/artificial_intelligence/5158",cd:"Real-time",d:"Congress.gov data filtered by AI tag. Bare-bones but authoritative.",st:"Active"},
+{n:"IAPP US State AI Tracker",o:"IAPP",c:"think",s:"US states",f:"Interactive tracker",u:"https://iapp.org/resources/article/us-state-ai-governance-legislation-tracker",cd:"Regular",d:"Cross-sectoral AI governance bills. IAPP's privacy DNA means strong data protection angle.",st:"Active"},
+{n:"IAPP Global AI Law Tracker",o:"IAPP",c:"think",s:"International",f:"Interactive dashboard",u:"https://prod.iapp.org/resources/article/global-ai-legislation-tracker/",cd:"Regular",d:"International developments: EU AI Act, Japan, South Korea, and more. Privacy-forward framing.",st:"Active"},
+{n:"Brennan Center AI Tracker",o:"Brennan Center for Justice",c:"think",s:"US federal",f:"Searchable database",u:"https://www.brennancenter.org/our-work/research-reports/artificial-intelligence-legislation-tracker",cd:"As bills drop",d:"Federal-only with a civil rights lens. For the 'what is Congress actually doing' question.",st:"Active"},
+{n:"AGORA",o:"Georgetown CSET + MIT",c:"think",s:"US + intl (900+ docs)",f:"Searchable archive",u:"https://www.grail-lab.org/publications/ai-governance-and-regulatory-archive",cd:"Living archive",d:"900+ governance documents mapped to taxonomies of risks, actors, and sectors. For the serious wonk.",st:"Active"},
+{n:"Brown AISLE Portal",o:"Brown University",c:"think",s:"US federal + 50 states",f:"Database w/ analyst evals",u:"https://www.brown.edu/news/2026-03-03/aisle-ai-legislation-portal",cd:"Continuous",d:"Brand new (March 2026). Structured analysis by trained evaluators. The new kid with serious chops.",st:"Active"},
+{n:"Transparency Coalition Tracker",o:"TCAI",c:"think",s:"US states + federal",f:"Curated bill list",u:"https://www.transparencycoalition.ai/news/ai-legislation-tracker-all-2026-ai-bills",cd:"Session-based",d:"Advocacy-oriented, focused on AI transparency. All 2026 AI bills in one place.",st:"Active"},
+{n:"Stanford HAI AI Index",o:"Stanford HAI",c:"think",s:"Global",f:"Annual report + data",u:"https://hai.stanford.edu/ai-index",cd:"Annual",d:"The annual gold standard. Legislative mentions across 75 countries, regulatory actions, governance trends.",st:"Active"},
+{n:"CDT AI Policy Tracker",o:"CDT",c:"think",s:"US + international",f:"Policy position archive",u:"https://projects.cdt.info/ai_policy_tracker/",cd:"Ongoing",d:"Less legislation tracker, more a map of how a major digital rights org frames every AI policy issue.",st:"Active"},
+{n:"White & Case AI Watch",o:"White & Case LLP",c:"law",s:"Global (12+ countries)",f:"Country narratives",u:"https://www.whitecase.com/insight-our-thinking/ai-watch-global-regulatory-tracker",cd:"Regular",d:"Broadest geographic coverage of any law firm tracker. IP, antitrust, data protection, M&A. The globe-trotter.",st:"Active"},
+{n:"Orrick AI Law Center",o:"Orrick",c:"law",s:"US states + EU + UK",f:"Interactive tracker",u:"https://ai-law-center.orrick.com/",cd:"Regular",d:"150+ state AI laws filterable by state, date, or domain. The most polished law firm offering.",st:"Active"},
+{n:"Akin AI Law Tracker",o:"Akin Gump",c:"law",s:"Global",f:"Searchable database",u:"https://www.akingump.com/en/insights/ai-law-and-regulation-tracker",cd:"Regular",d:"Legislation + litigation + enforcement globally. Goes beyond bills to include rulings.",st:"Active"},
+{n:"Steptoe AI Tracker",o:"Steptoe LLP",c:"law",s:"US federal + states",f:"Interactive tracker",u:"https://www.steptoe.com/en/ai-legislative-tracker.html",cd:"Ongoing",d:"Bill summaries, sponsor info, status. Clean interface. A reliable workhorse.",st:"Active"},
+{n:"Husch Blackwell AI State Tracker",o:"Husch Blackwell",c:"law",s:"US states",f:"Interactive map",u:"https://www.huschblackwell.com/2024-ai-state-law-tracker",cd:"Last: 2024",d:"Algorithmic bias and automated employment tools. Deep in its lane, but the lane may have ended.",st:"Possibly Stale"},
+{n:"MultiState.ai AI Tracker",o:"MultiState",c:"biz",s:"US — all 50 states",f:"Real-time dashboard",u:"https://www.multistate.ai/artificial-intelligence-ai-legislation",cd:"Daily",d:"The commercial powerhouse. Custom summaries for every bill version. 1,208 bills in 2025 alone.",st:"Active"},
+{n:"BSA AI Heatmap",o:"Business Software Alliance",c:"biz",s:"International",f:"Policy hub + heatmap",u:"https://www.bsa.org/policy-issues/ai",cd:"Periodic",d:"Industry trade group scorecard. Compares countries on risk approach, cyber, workforce.",st:"Active"},
+{n:"artificialintelligenceact.eu",o:"FLI community project",c:"biz",s:"EU (AI Act specific)",f:"Interactive Act explorer",u:"https://artificialintelligenceact.eu/",cd:"Ongoing",d:"Unofficial but stellar. Navigate the EU AI Act article by article. The community's bible.",st:"Active"},
+];
+const CATS={gov:{l:"Government & Intergovernmental",i:"🏛️"},think:{l:"Think Tank & Nonprofit",i:"🔬"},law:{l:"Law Firm",i:"⚖️"},biz:{l:"Industry & Commercial",i:"📊"}};
+let ac="all",q="";
+
+function render(){
+  let f=T.filter(t=>{
+    if(ac!=="all"&&t.c!==ac)return false;
+    if(q&&![t.n,t.o,t.d,t.s,t.f].join(" ").toLowerCase().includes(q.toLowerCase()))return false;
+    return true;
+  });
+  const g={};f.forEach(t=>{if(!g[t.c])g[t.c]=[];g[t.c].push(t);});
+  const el=document.getElementById("main");
+  if(!f.length){el.innerHTML='<div class="no-results"><p>No trackers match. Try a different search?</p></div>';return;}
+  let h="";
+  ["gov","think","law","biz"].forEach(c=>{
+    if(!g[c])return;
+    const cfg=CATS[c];
+    h+=`<div class="cat-section"><div class="cat-title-row"><span class="cat-emoji">${cfg.i}</span><h2>${cfg.l} <span class="cnt">(${g[c].length})</span></h2></div><div class="bento">`;
+    g[c].forEach(t=>{
+      const sc=t.st==="Active"?"s-active":"s-stale";
+      const cc=t.st.includes("Stale")?"stale":"";
+      h+=`<div class="card ${cc}"><div class="card-head"><div class="card-name">${t.n}</div><span class="status ${sc}">${t.st}</span></div><div class="card-org">${t.o}</div><div class="card-desc">${t.d}</div><div class="meta-row"><span class="meta m-scope">${t.s.length>30?t.s.slice(0,28)+'…':t.s}</span><span class="meta m-format">${t.f.split(',')[0]}</span><span class="meta m-cadence">${t.cd}</span></div><a class="visit" href="${t.u}" target="_blank">Visit →</a></div>`;
+    });
+    h+=`</div></div>`;
+  });
+  el.innerHTML=h;
+}
+function buildChips(){
+  const el=document.getElementById("chips");
+  const cn={};T.forEach(t=>cn[t.c]=(cn[t.c]||0)+1);
+  let h=`<button class="chip active" data-c="all">All ${T.length}</button>`;
+  Object.entries(CATS).forEach(([k,v])=>{h+=`<button class="chip" data-c="${k}">${v.i} ${v.l.split('&')[0].trim()} ${cn[k]}</button>`;});
+  el.innerHTML=h;
+  el.querySelectorAll(".chip").forEach(b=>b.addEventListener("click",()=>{
+    el.querySelectorAll(".chip").forEach(x=>x.classList.remove("active"));
+    b.classList.add("active");ac=b.dataset.c;render();
+  }));
+}
+document.getElementById("searchInput").addEventListener("input",e=>{q=e.target.value;render();});
+buildChips();render();
+</script>
+</body>
+</html>
