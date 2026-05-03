@@ -3,7 +3,47 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Policy Tracker Tracker</title>
+<title>AI Policy Tracker Tracker — A Meta-Catalog of AI Policy & Legislation Trackers</title>
+<meta name="description" content="A meta-catalog of AI legislation, regulation, and policy trackers. Compare 60+ tools from governments, think tanks, law firms, and industry groups tracking AI policy across US states, federal agencies, the EU, and globally.">
+<meta name="keywords" content="AI policy tracker, AI legislation tracker, AI regulation tracker, AI law tracker, state AI laws, EU AI Act, AI governance, AI policy comparison, AI regulatory tracker, AI policy database">
+<meta name="author" content="Daniel Kalish">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://ai-policy-tracker-tracker.vercel.app/">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ai-policy-tracker-tracker.vercel.app/">
+<meta property="og:title" content="AI Policy Tracker Tracker — A Meta-Catalog of AI Policy Trackers">
+<meta property="og:description" content="Compare 60+ tools tracking AI legislation, regulation, and policy across US states, federal agencies, the EU, and globally. Built by Daniel Kalish.">
+<meta property="og:site_name" content="AI Policy Tracker Tracker">
+<meta property="og:image" content="https://ai-policy-tracker-tracker.vercel.app/og-preview.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="AI Policy Tracker Tracker — a meta-catalog of AI policy and legislation trackers">
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@Daniel_Kalish_">
+<meta name="twitter:title" content="AI Policy Tracker Tracker">
+<meta name="twitter:description" content="A meta-catalog of 60+ AI policy and legislation trackers — government, think tank, law firm, and industry. Compare scope, cadence, and coverage.">
+<meta name="twitter:image" content="https://ai-policy-tracker-tracker.vercel.app/og-preview.png">
+<meta name="twitter:image:alt" content="AI Policy Tracker Tracker — a meta-catalog of AI policy and legislation trackers">
+
+<!-- Structured data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "AI Policy Tracker Tracker",
+  "url": "https://ai-policy-tracker-tracker.vercel.app/",
+  "description": "A meta-catalog of AI legislation, regulation, and policy tracking tools.",
+  "author": {
+    "@type": "Person",
+    "name": "Daniel Kalish",
+    "url": "https://x.com/Daniel_Kalish_"
+  }
+}
+</script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
   :root {
@@ -55,6 +95,79 @@
     color: var(--text-3);
     margin-top: .15rem;
   }
+  .header-left .byline {
+    font-size: .72rem;
+    color: var(--text-3);
+    margin-top: .25rem;
+  }
+  .header-left .byline a {
+    color: var(--text-2);
+    text-decoration: none;
+    font-weight: 600;
+    border-bottom: 1px dotted var(--text-3);
+  }
+  .header-left .byline a:hover { color: var(--blue); border-bottom-color: var(--blue); }
+
+  /* ── Site Footer ─────────────────── */
+  .site-footer {
+    border-top: 2px solid var(--border);
+    padding: 2rem;
+    background: var(--bg-alt);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 2rem;
+    align-items: start;
+  }
+  .site-footer .about h3 {
+    font-size: .95rem;
+    font-weight: 700;
+    margin-bottom: .5rem;
+  }
+  .site-footer .about p {
+    font-size: .82rem;
+    color: var(--text-2);
+    max-width: 60ch;
+    line-height: 1.55;
+  }
+  .contact-box {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    background: var(--bg);
+    min-width: 240px;
+  }
+  .contact-box h4 {
+    font-size: .8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: var(--text-3);
+    margin-bottom: .65rem;
+  }
+  .contact-box p {
+    font-size: .82rem;
+    color: var(--text-2);
+    margin-bottom: .65rem;
+  }
+  .contact-box .links {
+    display: flex;
+    flex-direction: column;
+    gap: .4rem;
+  }
+  .contact-box a {
+    font-size: .82rem;
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+  }
+  .contact-box a:hover { color: var(--blue); }
+  .contact-box a .icon { font-size: .9rem; }
+  @media (max-width: 720px) {
+    .site-footer { grid-template-columns: 1fr; padding: 1.5rem 1rem; }
+  }
   .header-right {
     display: flex;
     gap: .5rem;
@@ -89,6 +202,55 @@
     text-align: center;
   }
   .compare-count.visible { display: inline-block; }
+
+  /* ── Tab Strip ───────────────────── */
+  .tab-strip {
+    display: flex;
+    gap: 0;
+    padding: 0 2rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+  }
+  .main-tab {
+    padding: .85rem 1.25rem .8rem;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    font-size: .88rem;
+    font-weight: 600;
+    color: var(--text-3);
+    cursor: pointer;
+    transition: all .15s;
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    font-family: inherit;
+  }
+  .main-tab:hover { color: var(--text-2); }
+  .main-tab.active {
+    color: var(--blue);
+    border-bottom-color: var(--blue);
+  }
+  .main-tab .tab-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .7rem;
+    background: var(--bg-alt);
+    color: var(--text-3);
+    padding: .1rem .4rem;
+    border-radius: 10px;
+    font-weight: 500;
+  }
+  .main-tab.active .tab-count { background: var(--blue-bg); color: var(--blue); }
+  .tab-note {
+    padding: .65rem 2rem;
+    background: var(--bg-alt);
+    border-bottom: 1px solid var(--border-light);
+    font-size: .78rem;
+    color: var(--text-2);
+    line-height: 1.5;
+  }
+  .tab-note.hidden { display: none; }
 
   /* ── Toolbar ─────────────────────── */
   .toolbar {
@@ -563,6 +725,7 @@
   <div class="header-left">
     <h1>AI Policy <span>Tracker Tracker</span></h1>
     <div class="sub">A meta-catalog of AI legislation, regulation & policy tracking tools — April 2026</div>
+    <div class="byline">By <a href="https://x.com/Daniel_Kalish_" target="_blank" rel="noopener">Daniel Kalish</a></div>
   </div>
   <div class="header-right">
     <button class="hdr-btn" id="quizBtn"><span class="icon">🧭</span> Which tracker?</button>
@@ -575,6 +738,15 @@
 <!-- ── Ticker ──────────────────────── -->
 <div class="ticker-footer">
   <div class="ticker-track" id="tickerTrack"></div>
+</div>
+
+<!-- ── Tab Strip ───────────────────── -->
+<div class="tab-strip">
+  <button class="main-tab active" data-tab="policy">Policy Trackers <span class="tab-count" id="policyCount">0</span></button>
+  <button class="main-tab" data-tab="adjacent">Adjacent / Related <span class="tab-count" id="adjacentCount">0</span></button>
+</div>
+<div class="tab-note hidden" id="tabNote">
+  Resources adjacent to AI policy — not policy trackers themselves, but useful complements: AI harm incidents, corporate transparency scorecards, government deployment registers, and litigation case law.
 </div>
 
 <!-- ── Toolbar ─────────────────────── -->
@@ -649,6 +821,22 @@
   </table>
 </div>
 
+<!-- ── Site Footer ─────────────────── -->
+<footer class="site-footer">
+  <div class="about">
+    <h3>About this project</h3>
+    <p>The AI Policy Tracker Tracker is a meta-catalog of the tools tracking AI legislation, regulation, and policy. It compares scope, cadence, format, and coverage across government, think tank, law firm, and industry trackers — so you can find the one that fits your question instead of opening twelve tabs. Suggestions, corrections, and additions welcome.</p>
+  </div>
+  <div class="contact-box">
+    <h4>Get in touch</h4>
+    <p>Suggest a tracker, flag an error, or just say hi.</p>
+    <div class="links">
+      <a href="mailto:danielpkalish@gmail.com"><span class="icon">✉️</span> danielpkalish@gmail.com</a>
+      <a href="https://x.com/Daniel_Kalish_" target="_blank" rel="noopener"><span class="icon">𝕏</span> @Daniel_Kalish_</a>
+    </div>
+  </div>
+</footer>
+
 <!-- ── Compare Drawer ──────────────── -->
 <div class="compare-drawer" id="compareDrawer">
   <div class="compare-header">
@@ -703,12 +891,11 @@
 const T=[
 {n:"OECD.AI Policy Observatory",o:"OECD",c:"gov",cl:"Government",s:"Intl (80+ jurisdictions)",st2:["intl"],f:"Interactive dashboard",u:"https://oecd.ai/en/dashboards/overview",cd:"Continuous",d:"The 800-lb gorilla. 900+ national AI policies submitted directly by governments. If the OECD tracked it, it's probably real.",st:"Active",cost:"Free",interactive:true},
 {n:"NCSL AI Legislation Database",o:"Nat'l Conference of State Legislatures",c:"gov",cl:"Government",s:"US states + DC + territories",st2:["us-states"],f:"Searchable database",u:"https://www.ncsl.org/financial-services/artificial-intelligence-legislation-database",cd:"Monthly",d:"The go-to for state AI legislation. Categorized by topic. Run by the org that literally exists to track state legislatures.",st:"Active",cost:"Free",interactive:true},
-{n:"NCSL AI 2025 Legislation Summary",o:"Nat'l Conference of State Legislatures",c:"gov",cl:"Government",s:"US states (session-specific)",st2:["us-states"],f:"Curated narrative report",u:"https://www.ncsl.org/technology-and-communication/artificial-intelligence-2025-legislation",cd:"Annual",d:"Companion to the database — a curated overview of key AI bills each session. Good for the 'what happened this year' briefing.",st:"Active",cost:"Free",interactive:false},
 {n:"GovTrack.us — AI Bills",o:"Civic Impulse",c:"gov",cl:"Government",s:"US federal",st2:["us-fed"],f:"Legislative feed",u:"https://www.govtrack.us/congress/bills/subjects/artificial_intelligence/5158",cd:"Daily",d:"Independent civic-tech feed of Congress.gov bulk data, filtered to subject 5158 (Artificial Intelligence). Bare-bones but authoritative.",st:"Active",cost:"Free",interactive:true},
 {n:"IAPP US State AI Governance Tracker",o:"IAPP",c:"think",cl:"Think Tank",s:"US states",st2:["us-states"],f:"Interactive tracker",u:"https://iapp.org/resources/article/us-state-ai-governance-legislation-tracker",cd:"Regular",d:"Cross-sectoral AI governance bills. IAPP's privacy DNA means strong data protection angle.",st:"Active",cost:"Free (IAPP members get extras)",interactive:true},
-{n:"IAPP Global AI Law and Policy Tracker",o:"IAPP",c:"think",cl:"Think Tank",s:"International",st2:["intl"],f:"Interactive dashboard",u:"https://iapp.org/resources/article/global-ai-law-and-policy-tracker/",cd:"Regular",d:"International developments: EU AI Act, Japan, South Korea. Privacy-forward framing.",st:"Active",cost:"Free (IAPP members get extras)",interactive:true},
-{n:"Brennan Center AI Tracker",o:"Brennan Center for Justice",c:"think",cl:"Think Tank",s:"US federal",st2:["us-fed"],f:"Searchable database",u:"https://www.brennancenter.org/our-work/research-reports/artificial-intelligence-legislation-tracker",cd:"As bills drop",d:"Federal-only with a civil rights lens. 118th and 119th Congress.",st:"Active",cost:"Free",interactive:true},
-{n:"AGORA",o:"GRAIL (Purdue) + Georgetown CSET",c:"think",cl:"Think Tank",s:"US + intl (900+ docs)",st2:["us-fed","us-states","intl"],f:"Searchable archive",u:"https://www.grail-lab.org/publications/ai-governance-and-regulatory-archive",cd:"Living archive",d:"900+ governance documents mapped to taxonomies of risks, actors, and sectors. Built by Purdue's Governance and Responsible AI Lab with Georgetown CSET. For the serious wonk.",st:"Active",cost:"Free",interactive:true},
+{n:"IAPP Global AI Law and Policy Tracker",o:"IAPP",c:"think",cl:"Think Tank",s:"International",st2:["intl"],f:"Interactive dashboard",u:"https://prod.iapp.org/resources/article/global-ai-legislation-tracker/",cd:"Last updated: May 2025",d:"International developments: EU AI Act, Japan, South Korea. Privacy-forward framing. Coverage cuts off May 2025.",st:"Active",cost:"Free (IAPP members get extras)",interactive:true},
+{n:"Brennan Center AI Tracker",o:"Brennan Center for Justice",c:"think",cl:"Think Tank",s:"US federal",st2:["us-fed"],f:"Searchable database",u:"https://www.brennancenter.org/our-work/research-reports/artificial-intelligence-legislation-tracker",cd:"Last updated: September 2025",d:"Federal-only with a civil rights lens. 118th and 119th Congress.",st:"Active",cost:"Free",interactive:true},
+{n:"AGORA",o:"GRAIL (Purdue) + Georgetown CSET",c:"think",cl:"Think Tank",s:"US + intl (900+ docs)",st2:["us-fed","us-states","intl"],f:"Searchable archive",u:"https://www.grail-lab.org/publications/ai-governance-and-regulatory-archive",cd:"Last updated: July 2024",d:"One-time research project (released July 2024). 900+ governance documents mapped to taxonomies of risks, actors, and sectors. Built by Purdue's Governance and Responsible AI Lab with Georgetown CSET. Frozen since release, but still the deepest taxonomy-based view available.",st:"Stale",cost:"Free",interactive:true},
 {n:"Brown AISLE Portal",o:"Brown University",c:"think",cl:"Think Tank",s:"US federal + 50 states",st2:["us-fed","us-states"],f:"Database + analyst evaluations",u:"https://www.cntr-aisle.org",cd:"Continuous",d:"Brand new (March 2026). Structured analysis by trained evaluators. The new kid with serious chops.",st:"Active",cost:"Free",interactive:true},
 {n:"Transparency Coalition Tracker",o:"TCAI",c:"think",cl:"Think Tank",s:"US states + federal",st2:["us-fed","us-states"],f:"Curated bill list",u:"https://www.transparencycoalition.ai/news/track-ai-legislation-by-topic",cd:"Session-based",d:"Advocacy-oriented, focused on AI transparency. All 2026 AI bills in one place.",st:"Active",cost:"Free",interactive:false},
 {n:"Stanford HAI AI Index",o:"Stanford HAI",c:"think",cl:"Think Tank",s:"Global",st2:["intl"],f:"Annual report + data",u:"https://hai.stanford.edu/ai-index",cd:"Annual",d:"Not real-time but the annual gold standard. 2026 edition tracks regulatory activity and enforcement actions across 47 countries.",st:"Active",cost:"Free",interactive:false},
@@ -716,24 +903,24 @@ const T=[
 {n:"FPF State of State AI",o:"Future of Privacy Forum",c:"think",cl:"Think Tank",s:"US states",st2:["us-states"],f:"Annual report",u:"https://fpf.org/blog/the-state-of-state-ai-legislative-approaches-to-ai-in-2025/",cd:"Annual",d:"Analytical dive into state AI legislative trends. Excellent for 'what themes are emerging'.",st:"Active",cost:"Free",interactive:false},
 {n:"White & Case AI Watch",o:"White & Case LLP",c:"law",cl:"Law Firm",s:"Global (12+ countries)",st2:["intl","us-fed","eu"],f:"Country-by-country narrative",u:"https://www.whitecase.com/insight-our-thinking/ai-watch-global-regulatory-tracker",cd:"Regular",d:"Broadest geographic coverage of any law firm tracker. IP, antitrust, data protection, M&A.",st:"Active",cost:"Free",interactive:false},
 {n:"Orrick AI Law Center",o:"Orrick",c:"law",cl:"Law Firm",s:"US states + EU + UK",st2:["us-states","eu","intl"],f:"Interactive searchable tracker",u:"https://ai-law-center.orrick.com/",cd:"Regular",d:"150+ state AI laws filterable by state, date, or domain. The most polished law firm offering.",st:"Active",cost:"Free",interactive:true},
-{n:"Akin AI Law Tracker",o:"Akin Gump",c:"law",cl:"Law Firm",s:"Global",st2:["intl","us-fed","eu"],f:"Searchable event database",u:"https://www.akingump.com/en/insights/ai-law-and-regulation-tracker",cd:"Regular",d:"Legislation + litigation + enforcement globally. Goes beyond bills to include rulings.",st:"Active",cost:"Free",interactive:true},
+{n:"Akin AI Law Tracker",o:"Akin Gump",c:"law",cl:"Law Firm",s:"Global",st2:["intl","us-fed","eu"],f:"Article archive",u:"https://www.akingump.com/en/insights/ai-law-and-regulation-tracker",cd:"Regular",d:"Compilation of Akin's own articles on AI legislation, litigation, and enforcement globally. Not a structured event database — but the steady cadence of posts effectively tracks events as they happen.",st:"Active",cost:"Free",interactive:false},
 {n:"Steptoe AI Tracker",o:"Steptoe LLP",c:"law",cl:"Law Firm",s:"US federal + states",st2:["us-fed","us-states"],f:"Interactive tracker",u:"https://www.steptoe.com/en/ai-legislative-tracker.html",cd:"Ongoing",d:"Bill summaries, sponsor info, status. Clean interface. A reliable workhorse.",st:"Active",cost:"Free",interactive:true},
 {n:"Loeb & Loeb AI Tracker",o:"Loeb & Loeb LLP",c:"law",cl:"Law Firm",s:"US states",st2:["us-states"],f:"Interactive map + database",u:"https://www.loeb.com/en/general/ai",cd:"Regular",d:"State-by-state interactive map covering automated decision-making and data protection.",st:"Active",cost:"Free",interactive:true},
-{n:"BCLP AI Legislation Snapshot",o:"Bryan Cave Leighton Paisner",c:"law",cl:"Law Firm",s:"US + UK + EU",st2:["us-states","eu","intl"],f:"Interactive map + analysis",u:"https://www.bclplaw.com/en-US/events-insights-news/us-state-by-state-artificial-intelligence-legislation-snapshot.html",cd:"Regular",d:"Proposed, failed, and enacted bills with companion UK/EU trackers. Good transatlantic view.",st:"Active",cost:"Free",interactive:true},
+{n:"BCLP AI Legislation Snapshot",o:"Bryan Cave Leighton Paisner",c:"law",cl:"Law Firm",s:"US states",st2:["us-states"],f:"Interactive map + analysis",u:"https://www.bclplaw.com/en-US/events-insights-news/us-state-by-state-artificial-intelligence-legislation-snapshot.html",cd:"Regular",d:"State-by-state interactive map of US AI legislation — proposed, failed, and enacted across all 50 states.",st:"Active",cost:"Free",interactive:true},
 {n:"Mintz Federal AI Tracker",o:"Mintz",c:"law",cl:"Law Firm",s:"US federal",st2:["us-fed"],f:"Bill list + summaries",u:"https://www.mintz.com/ai-legislation",cd:"Last updated: 118th Congress (2023–2024)",d:"Federal-only. Congress.gov data with Mintz analysis layered on. Scope is locked to the 118th Congress; not refreshed for the 119th.",st:"Stale",cost:"Free",interactive:false},
 {n:"Husch Blackwell AI State Tracker",o:"Husch Blackwell",c:"law",cl:"Law Firm",s:"US states",st2:["us-states"],f:"Interactive map",u:"https://www.huschblackwell.com/2024-ai-state-law-tracker",cd:"Last updated: January 2025",d:"Algorithmic bias and automated employment tools. Branded for 2024 with no 2025/2026 refresh. Firm has pivoted to privacy and biometric trackers instead.",st:"Stale",cost:"Free",interactive:true},
 {n:"MultiState.ai AI Tracker",o:"MultiState",c:"biz",cl:"Industry",s:"US — all 50 states",st2:["us-states"],f:"Real-time dashboard",u:"https://www.multistate.ai/artificial-intelligence-ai-legislation",cd:"Daily",d:"The commercial powerhouse. Custom summaries for every bill version. 1,561 AI bills across 45 states YTD 2026 (1,208 bills / 145 enacted in 2025).",st:"Active",cost:"Free tier + paid",interactive:true},
 {n:"StateScape AI Tracker",o:"StateScape",c:"biz",cl:"Industry",s:"US federal + states",st2:["us-fed","us-states"],f:"Searchable database",u:"https://www.statescape.com/services/aitracker/",cd:"Daily",d:"Free AI-specific tracker from a legislative monitoring company. Good for teams needing a no-cost option.",st:"Active",cost:"Free",interactive:true},
 {n:"DLA Piper — AI Laws of the World",o:"DLA Piper",c:"law",cl:"Law Firm",s:"Global (40+ jurisdictions)",st2:["intl","us-fed","eu"],f:"Interactive comparison tool",u:"https://www.dlapiper.com/en/resources/ai-laws-of-the-world",cd:"Regular",d:"Side-by-side comparison of AI governance across 40+ countries. Modeled on their successful 'Data Protection Laws of the World' tool. Covers transparency, accountability, bias, and risk classification.",st:"Active",cost:"Free",interactive:true},
-{n:"Norton Rose Fulbright AI Regulation Hub",o:"Norton Rose Fulbright",c:"law",cl:"Law Firm",s:"Global",st2:["intl","us-fed","eu"],f:"Global guide + analysis",u:"https://www.nortonrosefulbright.com/en/knowledge/publications/73d88f00/ai-regulation",cd:"Periodic",d:"Comprehensive global AI regulation guide covering IP, procurement, governance, and risk. Published as downloadable guide plus web articles. Strong on cross-border perspective.",st:"Active",cost:"Free",interactive:false},
+{n:"Norton Rose Fulbright AI Regulation Hub",o:"Norton Rose Fulbright",c:"law",cl:"Law Firm",s:"Global",st2:["intl","us-fed","eu"],f:"Global guide + analysis",u:"https://www.nortonrosefulbright.com/en/knowledge/publications/73d88f00/ai-regulation",cd:"Last updated: July 2025",d:"One-time July 2025 global AI regulation guide covering IP, procurement, governance, and risk. Strong on cross-border perspective, but a snapshot rather than a maintained tracker.",st:"Stale",cost:"Free",interactive:false},
 {n:"Manatt Health AI Policy Tracker",o:"Manatt, Phelps & Phillips",c:"law",cl:"Law Firm",s:"US (healthcare-specific)",st2:["us-fed","us-states"],f:"Quarterly tracker",u:"https://www.manatt.com/insights/newsletters/health-highlights/manatt-health-health-ai-policy-tracker",cd:"Quarterly",d:"The only dedicated healthcare AI policy tracker. Covers FDA, CMS, ONC, FTC, and state legislation. Q1 2026 update: 36 states introduced 70+ health AI bills. Fills the sector-specific gap.",st:"Active",cost:"Free",interactive:false},
 {n:"NLC City AI Governance Dashboard",o:"National League of Cities",c:"gov",cl:"Government",s:"US municipalities",st2:["us-states"],f:"Interactive dashboard",u:"https://www.nlc.org/resource/city-ai-governance-dashboard/",cd:"Ongoing",d:"The only tracker cataloging municipal AI governance policies. Tracks how cities use and regulate generative AI in operations and services. Fills the 'below the state line' gap.",st:"Active",cost:"Free",interactive:true},
 {n:"Holistic AI Tracker",o:"Holistic AI",c:"biz",cl:"Industry",s:"Global",st2:["intl","us-fed","us-states","eu"],f:"All-in-one governance guide",u:"https://www.holisticai.com/ai-tracker",cd:"Continuous",d:"Legislation, incidents, and lawsuits globally. From a commercial AI governance platform. Strong on enforcement actions — tracks the 'so what' most trackers miss.",st:"Active",cost:"Free",interactive:true},
 {n:"CAIDP AI & Democratic Values Index",o:"Center for AI and Digital Policy",c:"think",cl:"Think Tank",s:"Global (75+ countries)",st2:["intl"],f:"Annual report + country rankings",u:"https://www.caidp.org/reports/caidp-index-2026/",cd:"Annual",d:"Rates and ranks 75+ countries on 12 democratic-values metrics. ~1,700 pages with 8,500+ footnotes. The deepest cross-country AI policy comparison available. Strong Global South coverage.",st:"Active",cost:"Free",interactive:false},
 {n:"Oxford Insights Gov't AI Readiness Index",o:"Oxford Insights",c:"think",cl:"Think Tank",s:"Global (195 countries)",st2:["intl"],f:"Annual index + interactive rankings",u:"https://oxfordinsights.com/ai-readiness/government-ai-readiness-index-2025/",cd:"Annual",d:"Ranks 195 governments on AI readiness across 69 indicators and 6 pillars. The benchmark for 'can your government even govern AI?' Complements legislation trackers with capacity data.",st:"Active",cost:"Free",interactive:true},
-{n:"AlgorithmWatch AI Ethics Guidelines Inventory",o:"AlgorithmWatch",c:"think",cl:"Think Tank",s:"International",st2:["intl"],f:"Searchable inventory",u:"https://inventory.algorithmwatch.org",cd:"Last updated: April 2024",d:"Mapped 160+ ethical AI frameworks worldwide. Revealed how few have enforcement mechanisms. No longer actively maintained, but the archived inventory remains a useful historical reference.",st:"Stale",cost:"Free",interactive:true},
+{n:"AlgorithmWatch AI Ethics Guidelines Inventory",o:"AlgorithmWatch",c:"think",cl:"Think Tank",s:"International",st2:["intl"],f:"Searchable inventory",u:"https://inventory.algorithmwatch.org",cd:"Last updated: April 2020",d:"Mapped 160+ ethical AI frameworks worldwide. Revealed how few have enforcement mechanisms. No longer actively maintained, but the archived inventory remains a useful historical reference.",st:"Stale",cost:"Free",interactive:true},
 {n:"FPF 2026 Chatbot Legislation Tracker",o:"Future of Privacy Forum",c:"think",cl:"Think Tank",s:"US — 34 states + federal",st2:["us-fed","us-states"],f:"Interactive data table",u:"https://fpf.org/2026-chatbot-legislation-tracker/",cd:"Weekly",d:"The only sector-topic tracker dedicated to chatbot legislation. 98 bills across 34 states plus 3 federal proposals, sorted into six regulatory categories: transparency, age verification, content safety, professional licensure, data protection, and liability. Fills the sector gap for consumer-facing AI products.",st:"Active",cost:"Free",interactive:true},
-{n:"CDT AI Policy Tracker",o:"Center for Democracy & Technology",c:"think",cl:"Think Tank",s:"US federal + states",st2:["us-fed","us-states"],f:"Curated policy tracker",u:"https://cdt.org/cdt-ai-governance-lab/cdt-ai-policy-tracker/",cd:"Regular",d:"Maintained by CDT's AI Governance Lab. Civil-liberties lens on AI legislation and regulatory developments. Longstanding civil-society voice in US AI policy.",st:"Active",cost:"Free",interactive:false},
+{n:"CDT AI Policy Tracker",o:"Center for Democracy & Technology",c:"think",cl:"Think Tank",s:"US federal + states",st2:["us-fed","us-states"],f:"Article archive",u:"https://cdt.org/cdt-ai-governance-lab/cdt-ai-policy-tracker/",cd:"Regular",d:"Compilation of CDT's own articles and analysis on AI policy, maintained by their AI Governance Lab. Civil-liberties lens. More an article archive than a structured tracker, but a longstanding civil-society voice in US AI policy.",st:"Active",cost:"Free",interactive:false},
 {n:"HSF Kramer AI Tracker",o:"Herbert Smith Freehills Kramer",c:"law",cl:"Law Firm",s:"Global",st2:["intl","us-fed","eu"],f:"Global regulatory tracker",u:"https://www.hsfkramer.com/insights/reports/ai-tracker",cd:"Regular",d:"Cross-jurisdictional AI law, regulation, and policy tracker from a major international firm. Complements White & Case and DLA Piper as a third global-firm option with distinct jurisdictional emphasis.",st:"Active",cost:"Free",interactive:false},
 {n:"Plural Policy AI Legislation Tracker",o:"Plural Policy",c:"biz",cl:"Industry",s:"US federal + 50 states + DC + PR",st2:["us-fed","us-states"],f:"AI-powered legislative database",u:"https://pluralpolicy.com/solutions/",cd:"Real-time",d:"Commercial, AI-powered tracker covering Congress, all 50 states, DC, and Puerto Rico. AI-generated bill summaries, automatic topic classification, and version diffs set it apart from MultiState and StateScape.",st:"Active",cost:"Free tier + paid",interactive:true},
 {n:"UNESCO Global AI Ethics & Governance Observatory",o:"UNESCO",c:"gov",cl:"Government",s:"International (193 member states)",st2:["intl"],f:"Country profiles + Readiness Assessment",u:"https://www.unesco.org/ethics-ai/en/global-hub",cd:"Ongoing",d:"Tracks implementation of UNESCO's 2021 AI Ethics Recommendation across member states. Country profiles draw on the Readiness Assessment Methodology (RAM). The only tracker with a universal UN mandate, with notable depth on Global South jurisdictions.",st:"Active",cost:"Free",interactive:true},
@@ -742,22 +929,22 @@ const T=[
 {n:"Hogan Lovells Engage AI Hub",o:"Hogan Lovells",c:"law",cl:"Law Firm",s:"Global (24+ jurisdictions)",st2:["us-fed","us-states","eu","intl"],f:"Interactive map + database",u:"https://digital-client-solutions.hoganlovells.com/resources/ai-hub",cd:"Continuous",d:"Free interactive global map. Each entry tagged by enforcement status (in effect / non-binding / voluntary / not in effect) and type — a heatmap-style status view that other global trackers don't offer.",st:"Active",cost:"Free",interactive:true},
 {n:"Ropes & Gray Health AI Atlas",o:"Ropes & Gray",c:"law",cl:"Law Firm",s:"US states + federal (healthcare)",st2:["us-fed","us-states"],f:"Interactive state-by-state map",u:"https://www.ropesgray.com/en/sites/healthai-atlas-state-ai-laws-healthcare",cd:"Ongoing",d:"State-by-state interactive tracker of healthcare AI laws, sliced into three sub-atlases by stakeholder role (developers, payors, providers) plus a federal-landscape section. Launched January 2026.",st:"Active",cost:"Free",interactive:true},
 {n:"Ropes & Gray AI Court Order Tracker",o:"Ropes & Gray",c:"law",cl:"Law Firm",s:"US federal courts + states",st2:["us-fed","us-states"],f:"Interactive map",u:"https://www.ropesgray.com/en/sites/artificial-intelligence-court-order-tracker",cd:"Ongoing",d:"Tracks judicial-branch AI rules: federal and state court standing orders, local rules, and decisions on AI use in court filings. The only tracker covering courts rather than legislatures or regulators.",st:"Active",cost:"Free",interactive:true},
-{n:"Fisher Phillips AI Legislation Map",o:"Fisher Phillips",c:"law",cl:"Law Firm",s:"US states (employment-focused)",st2:["us-states"],f:"Interactive map + table",u:"https://www.fisherphillips.com/en/resources-and-innovation/trackers-and-maps/ai-legislation-map",cd:"Periodic",d:"Employment-focused state AI legislation map from a leading L&E firm. Tilts toward hiring, automated employment decision tools, and workplace AI bills — fills the employment-sector gap the broader state trackers don't cover deeply.",st:"Active",cost:"Free",interactive:true},
+{n:"Fisher Phillips AI Legislation Map",o:"Fisher Phillips",c:"law",cl:"Law Firm",s:"US states",st2:["us-states"],f:"Interactive map + table",u:"https://www.fisherphillips.com/en/resources-and-innovation/trackers-and-maps/ai-legislation-map",cd:"Periodic",d:"Interactive state-by-state map of US AI legislation, covering bills across all topic areas. Published by an employment-focused firm, but the map itself is general-purpose AI legislation rather than employment-specific.",st:"Active",cost:"Free",interactive:true},
 {n:"Troutman Pepper Locke State AI Law Tracker",o:"Troutman Pepper Locke",c:"law",cl:"Law Firm",s:"US states",st2:["us-states"],f:"Interactive map",u:"https://www.troutman.com/state-artificial-intelligence-law-tracker/",cd:"Regular",d:"Released April 2026. Map of state laws affecting private-sector AI with a published category taxonomy (consumer-facing, high-risk, pricing, provenance, employment, health) and an explicit choice to exclude privacy-with-AI bills.",st:"Active",cost:"Free",interactive:true},
-{n:"Clifford Chance US AI State Laws Tracker",o:"Clifford Chance",c:"law",cl:"Law Firm",s:"US states (within global hub)",st2:["us-states","eu","intl"],f:"Interactive map + filters",u:"https://www.cliffordchance.com/insights/thought_leadership/ai-and-tech/global-ai-regulation/us-ai-state-laws-tracker.html",cd:"Regular",d:"A Magic Circle firm's view of US state AI laws — the only US-state tracker from a non-US-headquartered firm. Sits inside a broader Global AI Regulation hub so users can pivot from a state law to EU/APAC analysis.",st:"Active",cost:"Free",interactive:true},
-{n:"AI Incident Database",o:"Responsible AI Collaborative",c:"think",cl:"Think Tank",s:"Global",st2:["intl","us-fed","us-states","eu"],f:"Searchable incident database",u:"https://incidentdatabase.ai/",cd:"Continuous",d:"1,200+ documented AI harm/failure incidents, indexed and queryable. Open-submission with editorial curation. Closest thing to aviation-style incident reporting for AI — tracks the harms side legislation trackers ignore.",st:"Active",cost:"Free",interactive:true},
-{n:"Stanford CRFM Foundation Model Transparency Index",o:"Stanford CRFM",c:"think",cl:"Think Tank",s:"Global (frontier model developers)",st2:["intl"],f:"Comparable scorecard",u:"https://crfm.stanford.edu/fmti/",cd:"Roughly annual",d:"Periodic structured scorecard ranking foundation-model developers against 100 transparency indicators with year-over-year comparable scores. The only corporate-disclosure scorecard for AI labs themselves.",st:"Active",cost:"Free",interactive:true},
-{n:"Public Law Project — TAG Register",o:"Public Law Project (UK)",c:"think",cl:"Think Tank",s:"UK government deployments",st2:["intl"],f:"Public ADM register",u:"https://trackautomatedgovernment.shinyapps.io/register/",cd:"Periodic",d:"Public register of identified algorithmic and automated decision-making tools used by UK government bodies (55+ tools). Civil-society source for ADM transparency where official inventories are partial.",st:"Active",cost:"Free",interactive:true},
-{n:"Global Index on Responsible AI",o:"Global Center on AI Governance",c:"think",cl:"Think Tank",s:"Global (140+ countries)",st2:["intl"],f:"Biennial index + country profiles",u:"https://www.global-index.ai/",cd:"Biennial",d:"Measures 140+ countries' commitments to responsible AI against a human-rights-grounded benchmark. Distinct from CAIDP (democratic-values lens) and Oxford Insights (capacity lens) — anchored explicitly in international human-rights instruments.",st:"Active",cost:"Free",interactive:true},
+{n:"Clifford Chance US AI State Laws Tracker",o:"Clifford Chance",c:"law",cl:"Law Firm",s:"US states (within global hub)",st2:["us-states","eu","intl"],f:"Interactive map + filters",u:"https://www.cliffordchance.com/insights/thought_leadership/ai-and-tech/global-ai-regulation/us-ai-state-laws-tracker.html",cd:"Last updated: October 2025",d:"A Magic Circle firm's view of US state AI laws — the only US-state tracker from a non-US-headquartered firm. Sits inside a broader Global AI Regulation hub so users can pivot from a state law to EU/APAC analysis.",st:"Active",cost:"Free",interactive:true},
+{n:"AI Incident Database",o:"Responsible AI Collaborative",c:"think",cl:"Think Tank",s:"Global",st2:["intl","us-fed","us-states","eu"],f:"Searchable incident database",u:"https://incidentdatabase.ai/",cd:"Continuous",d:"1,200+ documented AI harm/failure incidents, indexed and queryable. Open-submission with editorial curation. Closest thing to aviation-style incident reporting for AI — tracks the harms side legislation trackers ignore.",st:"Active",cost:"Free",interactive:true,tab:"adjacent"},
+{n:"Stanford CRFM Foundation Model Transparency Index",o:"Stanford CRFM",c:"think",cl:"Think Tank",s:"Global (frontier model developers)",st2:["intl"],f:"Comparable scorecard",u:"https://crfm.stanford.edu/fmti/",cd:"Roughly annual",d:"Periodic structured scorecard ranking foundation-model developers against 100 transparency indicators with year-over-year comparable scores. The only corporate-disclosure scorecard for AI labs themselves.",st:"Active",cost:"Free",interactive:true,tab:"adjacent"},
+{n:"Public Law Project — TAG Register",o:"Public Law Project (UK)",c:"think",cl:"Think Tank",s:"UK government deployments",st2:["intl"],f:"Public ADM register",u:"https://trackautomatedgovernment.shinyapps.io/register/",cd:"Periodic",d:"Public register of identified algorithmic and automated decision-making tools used by UK government bodies (55+ tools). Civil-society source for ADM transparency where official inventories are partial.",st:"Active",cost:"Free",interactive:true,tab:"adjacent"},
+{n:"Hogan Lovells AI Litigation Case Law Tracker",o:"Hogan Lovells",c:"law",cl:"Law Firm",s:"Global",st2:["intl","us-fed","us-states","eu"],f:"Interactive case law database",u:"https://digital-client-solutions.hoganlovells.com/resources/ai-litigation-case-law-tracker",cd:"Ongoing",d:"Global tracker of AI-related litigation and case law, filterable by jurisdiction, claim type, and status. Maps the parallel universe of AI lawsuits — IP, defamation, employment, product liability — that are shaping AI governance as fast as legislation.",st:"Active",cost:"Free",interactive:true,tab:"adjacent"},
+{n:"Global Index on Responsible AI",o:"Global Center on AI Governance",c:"think",cl:"Think Tank",s:"Global (140+ countries)",st2:["intl"],f:"Index + country profiles",u:"https://www.global-index.ai/",cd:"One-time (2024)",d:"One-off 2024 study measuring 140+ countries' commitments to responsible AI against a human-rights-grounded benchmark. Distinct from CAIDP (democratic-values lens) and Oxford Insights (capacity lens) — but no further editions have appeared.",st:"Stale",cost:"Free",interactive:true},
 {n:"Council of Europe — AI Framework Convention Status",o:"Council of Europe Treaty Office",c:"gov",cl:"Government",s:"Global signatories (CoE + non-CoE)",st2:["intl"],f:"Treaty status table",u:"https://www.coe.int/en/web/conventions/full-list?module=signatures-by-treaty&treatynum=225",cd:"Per signature/ratification",d:"State-by-state status ledger for Treaty 225 (the world's first binding international AI treaty): signatures, ratifications, declarations, reservations, entry-into-force dates. Includes US, UK, Israel, Japan as non-CoE signatories.",st:"Active",cost:"Free",interactive:true},
-{n:"FDA AI/ML-Enabled Medical Device List",o:"U.S. Food and Drug Administration",c:"gov",cl:"Government",s:"US federal (healthcare devices)",st2:["us-fed"],f:"Authorization registry",u:"https://www.fda.gov/medical-devices/software-medical-device-samd/artificial-intelligence-enabled-medical-devices",cd:"Periodic",d:"FDA's own catalog of cleared/approved AI/ML-enabled medical devices (1,200+ entries). Device name, manufacturer, panel, submission number, decision date. Ground-truth deployment registry for healthcare AI in the US.",st:"Active",cost:"Free",interactive:true},
 {n:"NAIC AI Model Bulletin Adoption Tracker",o:"National Association of Insurance Commissioners",c:"gov",cl:"Government",s:"US states (insurance)",st2:["us-states"],f:"50-state adoption tracker",u:"https://content.naic.org/insurance-topics/artificial-intelligence",cd:"Quarterly-ish",d:"50-state catalog of which insurance regulators have adopted the NAIC Model Bulletin on insurer use of AI, with bulletin numbers, citations, and adoption dates. The definitive sector-specific tracker for insurance AI regulation.",st:"Active",cost:"Free",interactive:false},
 ];
 
 // ════════════════════════════════════════
 // STATE
 // ════════════════════════════════════════
-let ac="all", q="", sortKey="n", sortDir=1;
+let tab="policy", ac="all", q="", sortKey="n", sortDir=1;
 let expanded = new Set();
 let compared = new Set();
 let focusIdx = -1;
@@ -768,6 +955,7 @@ let filtered = [];
 // ════════════════════════════════════════
 function getFiltered() {
   let f = T.filter(t => {
+    if ((t.tab || "policy") !== tab) return false;
     if (ac !== "all" && t.c !== ac) return false;
     if (q && ![t.n, t.o, t.d, t.s, t.f, t.cl].join(" ").toLowerCase().includes(q.toLowerCase())) return false;
     return true;
@@ -781,7 +969,10 @@ function getFiltered() {
 
 function render() {
   filtered = getFiltered();
-  document.getElementById("rc").textContent = `${filtered.length} of ${T.length}`;
+  const tabTotal = T.filter(t => (t.tab || "policy") === tab).length;
+  document.getElementById("rc").textContent = `${filtered.length} of ${tabTotal}`;
+  document.getElementById("policyCount").textContent = T.filter(t => (t.tab || "policy") === "policy").length;
+  document.getElementById("adjacentCount").textContent = T.filter(t => t.tab === "adjacent").length;
   const tb = document.getElementById("tbody");
   if (!filtered.length) { tb.innerHTML = '<tr><td colspan="9" class="no-results">No trackers match your search.</td></tr>'; return; }
   let h = "";
@@ -1158,6 +1349,21 @@ document.querySelectorAll('th[data-sort]').forEach(th => {
     document.querySelectorAll('th .arrow').forEach(a => a.textContent = '');
     th.querySelector('.arrow').textContent = sortDir === 1 ? '▼' : '▲';
     focusIdx = -1;
+    render();
+  });
+});
+
+// ════════════════════════════════════════
+// MAIN TABS
+// ════════════════════════════════════════
+document.querySelectorAll('.main-tab').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.main-tab').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    tab = b.dataset.tab;
+    document.getElementById("tabNote").classList.toggle("hidden", tab !== "adjacent");
+    focusIdx = -1;
+    expanded.clear();
     render();
   });
 });
