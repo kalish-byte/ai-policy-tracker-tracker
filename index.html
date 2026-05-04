@@ -8,7 +8,14 @@
 <meta name="keywords" content="AI policy tracker, AI legislation tracker, AI regulation tracker, AI law tracker, state AI laws, EU AI Act, AI governance, AI policy comparison, AI regulatory tracker, AI policy database">
 <meta name="author" content="Daniel Kalish">
 <meta name="robots" content="index, follow">
+<meta name="theme-color" content="#3b82f6">
 <link rel="canonical" href="https://ai-policy-tracker-tracker.vercel.app/">
+
+<!-- Favicons -->
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
@@ -73,6 +80,62 @@
     line-height: 1.5;
   }
 
+  /* ── Radar logo (animated) ───────── */
+  @keyframes rttSweep { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  .radar-tt {
+    position: relative;
+    border-radius: 50%;
+    background: #ffffff;
+    overflow: hidden;
+    border: 2.5px solid #0f172a;
+    color: #0f172a;
+    flex-shrink: 0;
+  }
+  .radar-tt .rtt-ring {
+    position: absolute; border-radius: 50%;
+    border: 1px solid currentColor; opacity: .30;
+  }
+  .radar-tt .rtt-cv,
+  .radar-tt .rtt-ch {
+    position: absolute; background: currentColor; opacity: .20;
+  }
+  .radar-tt .rtt-cv { left: 50%; top: 0; bottom: 0; width: 1px; transform: translateX(-50%); }
+  .radar-tt .rtt-ch { top: 50%; left: 0; right: 0; height: 1px; transform: translateY(-50%); }
+  .radar-tt .rtt-blip { position: absolute; transform: translate(-50%, -50%); }
+  .radar-tt .rtt-sweep {
+    position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
+    animation: rttSweep var(--rtt-dur, 6s) linear infinite;
+  }
+  .radar-tt .rtt-trail {
+    position: absolute; inset: 0; border-radius: 50%;
+    background: conic-gradient(from 90deg,
+      rgba(59,130,246,0) 0deg,
+      rgba(59,130,246,0) 240deg,
+      rgba(59,130,246,0.55) 360deg);
+  }
+  .radar-tt .rtt-line {
+    position: absolute; left: 50%; top: 50%;
+    width: 50%; height: 2px;
+    background: #3b82f6;
+    transform-origin: 0 50%;
+    box-shadow: 0 0 4px rgba(59,130,246,0.5);
+  }
+  .radar-tt .rtt-line.thin { height: 1.5px; box-shadow: 0 0 2px rgba(59,130,246,0.5); }
+  .radar-tt .rtt-dot {
+    position: absolute; left: 50%; top: 50%;
+    width: 5px; height: 5px; background: #0f172a; border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .radar-tt .rtt-sweep { animation: none; }
+  }
+
+  .header-title-row {
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+  }
+
   /* ── Header ──────────────────────── */
   .header {
     border-bottom: 1px solid var(--border);
@@ -84,10 +147,11 @@
     gap: 1rem;
   }
   .header-left h1 {
-    font-size: 1.25rem;
+    font-size: 1.75rem;
     font-weight: 800;
     color: var(--text);
     letter-spacing: -.02em;
+    line-height: 1.1;
   }
   .header-left h1 span { color: var(--blue); }
   .header-left .byline {
@@ -724,8 +788,59 @@
 <!-- ── Header ──────────────────────── -->
 <div class="header">
   <div class="header-left">
-    <h1>AI Policy <span>Tracker Tracker</span></h1>
-    <div class="byline">By <a href="https://x.com/Daniel_Kalish_" target="_blank" rel="noopener">Daniel Kalish</a></div>
+    <div class="header-title-row">
+      <div class="radar-tt" style="width:120px; height:120px; --rtt-dur:6s;" aria-hidden="true">
+        <div class="rtt-ring" style="width:22%; height:22%; left:39%; top:39%;"></div>
+        <div class="rtt-ring" style="width:44%; height:44%; left:28%; top:28%;"></div>
+        <div class="rtt-ring" style="width:66%; height:66%; left:17%; top:17%;"></div>
+        <div class="rtt-cv"></div>
+        <div class="rtt-ch"></div>
+        <div class="rtt-blip" style="left:30%; top:32%; width:19%; height:19%;">
+          <div class="radar-tt" style="width:100%; height:100%; border-width:1.5px; --rtt-dur:2.4s;">
+            <div class="rtt-ring" style="width:40%; height:40%; left:30%; top:30%;"></div>
+            <div class="rtt-ring" style="width:75%; height:75%; left:12.5%; top:12.5%;"></div>
+            <div class="rtt-cv"></div>
+            <div class="rtt-ch"></div>
+            <div class="rtt-sweep"><div class="rtt-trail"></div><div class="rtt-line"></div></div>
+            <div class="rtt-dot" style="width:3px; height:3px;"></div>
+          </div>
+        </div>
+        <div class="rtt-blip" style="left:70%; top:36%; width:15%; height:15%;">
+          <div class="radar-tt" style="width:100%; height:100%; border-width:1.5px; --rtt-dur:3.1s;">
+            <div class="rtt-ring" style="width:40%; height:40%; left:30%; top:30%;"></div>
+            <div class="rtt-cv"></div>
+            <div class="rtt-ch"></div>
+            <div class="rtt-sweep"><div class="rtt-trail"></div><div class="rtt-line thin"></div></div>
+            <div class="rtt-dot" style="width:3px; height:3px;"></div>
+          </div>
+        </div>
+        <div class="rtt-blip" style="left:66%; top:70%; width:17%; height:17%;">
+          <div class="radar-tt" style="width:100%; height:100%; border-width:1.5px; --rtt-dur:2.7s;">
+            <div class="rtt-ring" style="width:40%; height:40%; left:30%; top:30%;"></div>
+            <div class="rtt-ring" style="width:75%; height:75%; left:12.5%; top:12.5%;"></div>
+            <div class="rtt-cv"></div>
+            <div class="rtt-ch"></div>
+            <div class="rtt-sweep"><div class="rtt-trail"></div><div class="rtt-line"></div></div>
+            <div class="rtt-dot" style="width:3px; height:3px;"></div>
+          </div>
+        </div>
+        <div class="rtt-blip" style="left:32%; top:68%; width:14%; height:14%;">
+          <div class="radar-tt" style="width:100%; height:100%; border-width:1.5px; --rtt-dur:3.6s;">
+            <div class="rtt-ring" style="width:40%; height:40%; left:30%; top:30%;"></div>
+            <div class="rtt-cv"></div>
+            <div class="rtt-ch"></div>
+            <div class="rtt-sweep"><div class="rtt-trail"></div><div class="rtt-line thin"></div></div>
+            <div class="rtt-dot" style="width:3px; height:3px;"></div>
+          </div>
+        </div>
+        <div class="rtt-sweep"><div class="rtt-trail"></div><div class="rtt-line"></div></div>
+        <div class="rtt-dot"></div>
+      </div>
+      <div class="header-text">
+        <h1>AI Policy <span>Tracker Tracker</span></h1>
+        <div class="byline">By <a href="https://x.com/Daniel_Kalish_" target="_blank" rel="noopener">Daniel Kalish</a></div>
+      </div>
+    </div>
   </div>
   <div class="header-right">
     <div class="header-info">
